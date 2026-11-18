@@ -1,3 +1,4 @@
+using Managers;
 using UnityEngine;
 
 public class KartSpawner : MonoBehaviour
@@ -13,8 +14,6 @@ public class KartSpawner : MonoBehaviour
             Debug.LogWarning("No PlayerManager. Start from the main menu scene.");
             return;
         }
-
-        manager.AcceptingJoins = false;   // lock the roster for the match
 
         foreach (PlayerSlot slot in manager.Players)
         {

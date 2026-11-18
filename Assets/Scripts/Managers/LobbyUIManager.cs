@@ -5,9 +5,9 @@ using UnityEngine.UIElements;
 namespace Managers {
     [RequireComponent(typeof(UIDocument))]
     public class LobbyUIManager : MonoBehaviour {
-        [SerializeField] private VisualTreeAsset     entry;
-        private                  UIDocument          uiDoc;
-        private                  VisualElement       playerList;
+        [SerializeField] private VisualTreeAsset entry;
+        private                  UIDocument      uiDoc;
+        private                  VisualElement   playerList;
 
         private void Awake() {
             uiDoc      = GetComponent<UIDocument>();
@@ -15,13 +15,20 @@ namespace Managers {
         }
 
         private void Start() {
-            PlayerManager.Instance.PlayerJoined += OnPlayerJoined;
-            PlayerManager.Instance.PlayerLeft += OnPlayerLeft;
+            PlayerManager.Instance.PlayerJoined       += OnPlayerJoined;
+            PlayerManager.Instance.PlayerLeft         += OnPlayerLeft;
+            PlayerManager.Instance.PlayerStateChanged += OnPlayerStateChanged;
+        }
+
+        private void OnPlayerStateChanged(PlayerSlot player) {
+            if (player.IsConnected) OnPlayerJoined(player);
+            else OnPlayerLeft(player);
         }
 
         private void OnDestroy() {
-            PlayerManager.Instance.PlayerJoined -= OnPlayerJoined;
-            PlayerManager.Instance.PlayerLeft -= OnPlayerLeft;
+            PlayerManager.Instance.PlayerJoined       -= OnPlayerJoined;
+            PlayerManager.Instance.PlayerLeft         -= OnPlayerLeft;
+            PlayerManager.Instance.PlayerStateChanged -= OnPlayerStateChanged;
         }
 
         private void OnPlayerJoined(PlayerSlot player) {
@@ -29,7 +36,7 @@ namespace Managers {
             playerEntryElement.Initialize(player.DisplayName, player.Color, player.Index);
             playerList.Add(playerEntryElement);
         }
-        
+
         private void OnPlayerLeft(PlayerSlot player) {
             foreach (var child in playerList.Children()) {
                 if (child is not PlayerEntryElement playerEntry) continue;
