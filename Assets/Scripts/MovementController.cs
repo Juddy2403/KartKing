@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerMovement : MonoBehaviour
+public class MovementController : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float acceleration = 15f;

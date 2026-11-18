@@ -1,11 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/// <summary>
-/// One seat in the match. Owns its own copy of the input actions, restricted to a single device,
-/// so several players can use the same bindings without reading each other's input.
-/// A slot with no device is a bot.
-/// </summary>
 public class PlayerSlot
 {
     public int Index { get; }

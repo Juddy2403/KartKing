@@ -1,10 +1,14 @@
 using UnityEngine;
 
-/// <summary>Ties a kart GameObject to a PlayerSlot. Later: crown, ball, score, etc.</summary>
+[RequireComponent(typeof(ShootingController))]
 public class Kart : MonoBehaviour
 {
-    public PlayerSlot Slot { get; private set; }
+    public  PlayerSlot         Slot { get; private set; }
+    private ShootingController shootingController;
 
+    private void Awake() {
+        shootingController = GetComponent<ShootingController>();
+    }
     public void Initialize(PlayerSlot slot)
     {
         Slot = slot;
@@ -23,4 +27,11 @@ public class Kart : MonoBehaviour
             GetComponent<HumanKartInput>().Bind(slot);
         }
     }
+
+    private void OnTriggerEnter(Collider other) {
+        if (!other.gameObject.CompareTag("Ball")) return;
+        shootingController.enabled = true;
+        Destroy(other.gameObject); 
+    }
+    
 }
