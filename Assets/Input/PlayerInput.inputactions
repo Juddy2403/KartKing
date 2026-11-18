@@ -3,11 +3,11 @@
     "name": "PlayerInput",
     "maps": [
         {
-            "name": "Movement",
+            "name": "Kart",
             "id": "0d8f36d2-f33d-4c26-b1c8-f9c66e2adb2b",
             "actions": [
                 {
-                    "name": "Move",
+                    "name": "Steering",
                     "type": "Value",
                     "id": "8ce6f2fb-c3e0-48cf-ae7f-00eeb0feebd6",
                     "expectedControlType": "Stick",
@@ -42,7 +42,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Steering",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

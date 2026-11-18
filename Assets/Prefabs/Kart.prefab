@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7041132108650598787}
   - component: {fileID: 7773003694634218282}
   - component: {fileID: 2585337795271365400}
+  - component: {fileID: 1670868977749714064}
+  - component: {fileID: 1234971005805377559}
   m_Layer: 0
   m_Name: Kart
   m_TagString: Untagged
@@ -97,9 +99,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0586f0b52403bf648bc59ce3669687e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  steeringAction: {fileID: -3051084602848556082, guid: db5947d0f757d5640935065bc985c125, type: 3}
-  accelerateAction: {fileID: -2349137446797846302, guid: db5947d0f757d5640935065bc985c125, type: 3}
-  backAction: {fileID: -2544395112731939209, guid: db5947d0f757d5640935065bc985c125, type: 3}
   acceleration: 40
   backingAcceleration: 20
   brakeDeceleration: 50
@@ -108,6 +107,30 @@ MonoBehaviour:
   drag: 2
   steeringSpeed: 130
   minSteeringFactor: 0.2
+--- !u!114 &1670868977749714064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7747163609600243233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07f7c85535120594ba0629e328868835, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Kart
+--- !u!114 &1234971005805377559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7747163609600243233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d350c256e1c8c641a421db4685e8d29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HumanKartInput
 --- !u!1001 &6329588529066176192
 PrefabInstance:
   m_ObjectHideFlags: 0

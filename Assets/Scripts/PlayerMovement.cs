@@ -1,29 +1,28 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Input")]
-    [SerializeField] private InputActionReference steeringAction;
-    [SerializeField] private InputActionReference accelerateAction;
-    [SerializeField] private InputActionReference backAction;
-
     [Header("Movement")]
     [SerializeField] private float acceleration = 15f;
     [SerializeField] private float backingAcceleration = 5f;
-    [SerializeField] private float brakeDeceleration = 10f;
-    [SerializeField] private float maxSpeed = 20f;
-    [SerializeField] private float maxBacking = 5f;
-    [SerializeField] private float drag = 2f;
+    [SerializeField] private float brakeDeceleration   = 25f;
+    [SerializeField] private float maxSpeed            = 20f;
+    [SerializeField] private float maxBacking          = 5f;
+    [SerializeField] private float drag                = 2f;
 
     [Header("Steering")]
     [SerializeField] private float steeringSpeed = 100f;
     [SerializeField] private float minSteeringFactor = 0.2f;
 
-    private Rigidbody rigidBody;
-    private MovementState  movementState;
+    private Rigidbody     rigidBody;
+    private IKartInput    input;
+    private MovementState movementState;
+    private void          Awake() => rigidBody = GetComponent<Rigidbody>();
+
+    // Start (not Awake) so Kart.Initialize has already attached the right input source
+    private void Start() => input = GetComponent<IKartInput>();
 
     private enum MovementState {
         idle,
@@ -31,21 +30,11 @@ public class PlayerMovement : MonoBehaviour
         brake,
         backing
     }
-    private void Awake()
-    {
-        rigidBody = GetComponent<Rigidbody>();
-    }
-    private void OnEnable()
-    {
-        steeringAction.action.Enable();
-        accelerateAction.action.Enable();
-        backAction.action.Enable();
-    }
     private void FixedUpdate()
     {
-        float steering        = steeringAction.action.ReadValue<Vector2>().x;
-        bool  accelerateValue = accelerateAction.action.IsPressed();
-        bool  brakeValue      = backAction.action.IsPressed();
+        float steering        = input.Steering;
+        bool  accelerateValue = input.Accelerate;
+        bool  brakeValue      = input.Brake;
         
         Vector3 velocity       = rigidBody.linearVelocity;
         float   forwardSpeed   = Vector3.Dot(velocity, transform.forward);
