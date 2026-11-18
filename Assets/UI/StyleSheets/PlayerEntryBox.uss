@@ -1,0 +1,17 @@
+:root {
+}
+
+.label {
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+    align-content: center;
+    -unity-font-definition: url("project://database/Library/unity%20default%20resources?fileID=10102&guid=0000000000000000e000000000000000&type=0#LegacyRuntime");
+    -unity-font-style: bold;
+    font-size: 45px;
+    -unity-text-align: middle-center;
+}
+
+.box {
+    background-color: rgb(107, 124, 205);
+}

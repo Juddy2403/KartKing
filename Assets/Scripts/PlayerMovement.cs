@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody     rigidBody;
     private IKartInput    input;
     private MovementState movementState;
-    private void          Awake() => rigidBody = GetComponent<Rigidbody>();
+    private void Awake() => rigidBody = GetComponent<Rigidbody>();
 
     // Start (not Awake) so Kart.Initialize has already attached the right input source
     private void Start() => input = GetComponent<IKartInput>();
