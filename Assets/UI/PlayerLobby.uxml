@@ -1,5 +1,4 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="VisualElement" style="flex-grow: 1;">
-        <ui:ListView name="PlayerList" show-bound-collection-size="true" item-template="project://database/Assets/UI/PlayerEntry.uxml?fileID=9197481963319205126&amp;guid=10b7e4df39cab6141a6e020a399178b0&amp;type=3#PlayerEntry" style="align-items: center; top: 2%;"/>
-    </ui:VisualElement>
+    <Style src="project://database/Assets/UI/StyleSheets/PlayerEntryBox.uss?fileID=7433441132597879392&amp;guid=db8674ac64efe9447b34d1b84c29c2cc&amp;type=3#PlayerEntryBox"/>
+    <ui:VisualElement name="PlayerList" style="position: absolute; width: 561px; height: 907px; top: 92px; left: 158px;"/>
 </ui:UXML>
