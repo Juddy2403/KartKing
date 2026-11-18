@@ -10,6 +10,8 @@
     -unity-font-style: bold;
     font-size: 45px;
     -unity-text-align: middle-center;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 0;
 }
 
 .box {

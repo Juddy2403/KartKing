@@ -8,6 +8,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Arena.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/PlayerLobby.unity
+    guid: fe3070e6b13bd83449706abcbc77c1c8
+  - enabled: 1
+    path: Assets/Scenes/Leaderboard.unity
+    guid: f2f03aad8ae10d847a4af0e081a79165
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

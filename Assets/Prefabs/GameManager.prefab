@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8117588402498198337}
   - component: {fileID: 4401024004488104644}
+  - component: {fileID: 1797691646496908146}
+  - component: {fileID: 2694521693335611670}
+  - component: {fileID: 4565931890994085751}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -44,17 +47,71 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aab856eb83328b74cb8cf0b673ca3e09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
-  kartControls: {fileID: -944628639613478452, guid: db5947d0f757d5640935065bc985c125, type: 3}
   playerColors:
-  - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 1, g: 1, b: 1, a: 0}
-  - {r: 0.9529412, g: 0.8481467, b: 0, a: 0}
-  - {r: 0.99607843, g: 0.6020301, b: 0, a: 0}
-  - {r: 1, g: 0.09165124, b: 0, a: 0}
-  - {r: 0.8742138, g: 0.068727314, b: 0.5888161, a: 0}
-  - {r: 0.27072227, g: 0.15303971, b: 0.66666657, a: 0}
-  - {r: 0.20068417, g: 0.7239762, b: 0.8742138, a: 0}
-  - {r: 0.003921569, g: 0.27058825, b: 0.59607846, a: 0}
-  - {r: 0.43921572, g: 0.7568628, b: 0.2509804, a: 0}
-  - {r: 0.003921569, g: 0.4156863, b: 0.25882354, a: 0}
-  - {r: 0.4431373, g: 0.23137257, b: 0.19215688, a: 0}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0.9529412, g: 0.8481467, b: 0, a: 1}
+  - {r: 0.99607843, g: 0.6020301, b: 0, a: 1}
+  - {r: 1, g: 0.09165124, b: 0, a: 1}
+  - {r: 0.8742138, g: 0.068727314, b: 0.5888161, a: 1}
+  - {r: 0.27072227, g: 0.15303971, b: 0.66666657, a: 1}
+  - {r: 0.20068417, g: 0.7239762, b: 0.8742138, a: 1}
+  - {r: 0.003921569, g: 0.27058825, b: 0.59607846, a: 1}
+  - {r: 0.43921572, g: 0.7568628, b: 0.2509804, a: 1}
+  - {r: 0.003921569, g: 0.4156863, b: 0.25882354, a: 1}
+  - {r: 0.4431373, g: 0.23137257, b: 0.19215688, a: 1}
+--- !u!114 &1797691646496908146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586544746493296522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87d466ca8f2a4218b2ce46fe35f5b511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Managers.SceneManager
+  scenes:
+  - name: PlayerLobby
+    type: 1
+  - name: Arena
+    type: 2
+  - name: Leaderboard
+    type: 3
+  OnSceneChange:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &2694521693335611670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586544746493296522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 502897e831d146e7bddca18619aafa05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Managers.InputManager
+  inputActions: {fileID: -944628639613478452, guid: db5947d0f757d5640935065bc985c125, type: 3}
+--- !u!114 &4565931890994085751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586544746493296522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d3982b445964bfa914a2cc22539bcb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Managers.GameManager
+  RoundTime: 20
+  onRoundEnded:
+    m_PersistentCalls:
+      m_Calls: []
+  onTimeTick:
+    m_PersistentCalls:
+      m_Calls: []
+  shouldTick: 0

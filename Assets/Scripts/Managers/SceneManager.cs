@@ -42,7 +42,7 @@ namespace Managers {
             OnSceneChange?.Invoke(scenes[sceneIdx].type);
         }
 
-        private void Destroy() {
+        private void OnDestroy() {
             OnSceneChange.RemoveAllListeners();
         }
 

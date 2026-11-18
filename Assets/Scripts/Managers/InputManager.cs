@@ -5,18 +5,18 @@ using UnityEngine.InputSystem;
 namespace Managers {
     public class InputManager : MonoBehaviour {
         [SerializeField] private InputActionAsset inputActions;
-        public static InputManager Instance { get; private set; }
-        
+        private static           InputManager     instance;
+
         private void Awake() {
-            if (Instance != null && Instance != this) {
+            if (instance != null && instance != this) {
                 Destroy(gameObject);
                 return;
             }
 
-            Instance = this;
+            instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        
+
         private void Start() {
             SceneManager.Instance.OnSceneChange.AddListener(OnSceneChange);
         }
@@ -25,7 +25,7 @@ namespace Managers {
             SceneManager.Instance.OnSceneChange?.RemoveListener(OnSceneChange);
             var map = inputActions.FindActionMap("Lobby", true);
             map.FindAction("Confirm").started -= HandleConfirm;
-            map.FindAction("Cancel").started -= HandleCancel;
+            map.FindAction("Cancel").started  -= HandleCancel;
         }
 
         private void OnSceneChange(SceneManager.SceneType type) {
@@ -54,17 +54,16 @@ namespace Managers {
             var device = obj.control.device;
             if (PlayerManager.Instance.FindSlot(device) != null) {
                 if (PlayerManager.Instance.CanStart) SceneManager.Instance.LoadNextScene();
-                return; 
+                return;
             }
+
             PlayerManager.Instance.TryJoin(device, inputActions);
         }
 
         private void HandleCancel(InputAction.CallbackContext obj) {
-            var device = obj.control.device;
-            PlayerSlot slot = PlayerManager.Instance.FindSlot(device);
+            var        device = obj.control.device;
+            PlayerSlot slot   = PlayerManager.Instance.FindSlot(device);
             if (slot != null) PlayerManager.Instance.Leave(slot);
         }
-        
-        
     }
 }
