@@ -17,7 +17,7 @@ public class Kart : MonoBehaviour {
     public  UnityEvent  onBallShot;
     public  PlayerSlot  Slot { get; private set; }
     private KartEffects kartEffects;
-    private Ball        ball;
+    private Ball        heldBall = null;
     private Crown       crown;
 
     [SerializeField] private Renderer targetRenderer;
@@ -50,9 +50,6 @@ public class Kart : MonoBehaviour {
     }
 
     private void Start() {
-        ball = FindFirstObjectByType<Ball>();
-        if (!ball) Debug.LogError("No ball found in scene");
-
         crown = FindFirstObjectByType<Crown>();
         if (!crown) Debug.LogError("No crown found in scene");
 
@@ -62,37 +59,56 @@ public class Kart : MonoBehaviour {
     }
 
     private void OnShootRequest(Vector3 direction, float force) {
-        if (ball.Holder == this) {
-            ball.Shoot(direction, force);
-            onBallShot?.Invoke();
-        }
+        if (!heldBall) return;
+        ShootBall(direction, force);
     }
 
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("Ball")) {
+            // Can only pick up one ball at a time
+            if (heldBall) return;
+            
+            var ball = other.gameObject.GetComponent<Ball>();
             if (crown.Holder == this) {
                 // If no one shot the ball, keep the crown
                 if (!ball.Shooter) return;
                 if(kartEffects.HasImmunity) return;
 
+                // Handing the crown to the attacker
                 crown.PickUp(ball.Shooter);
                 onLostCrown?.Invoke();
-                ball.PickUp(gameObject);
-                onBallPickedUp?.Invoke();
+                
+                PickUpBall(ball);
             }
             else {
-                ball.PickUp(gameObject);
-                onBallPickedUp?.Invoke();
+                PickUpBall(ball);
             }
         }
         else if (other.gameObject.CompareTag("Crown")) {
-            if (ball.Holder == this) {
-                ball.Drop();
-                onBallShot?.Invoke();
+            if (heldBall) {
+                DropBall();
             }
 
             crown.PickUp(this);
             onCapturedCrown?.Invoke();
         }
+    }
+
+    private void DropBall() {
+        heldBall.Drop();
+        heldBall = null;
+        onBallShot?.Invoke();
+    }
+
+    private void ShootBall(Vector3 direction, float force) {
+        heldBall.Shoot(direction, force);
+        heldBall = null;
+        onBallShot?.Invoke();
+    }
+    
+    private void PickUpBall(Ball ball) {
+        ball.PickUp(gameObject);
+        heldBall = ball;
+        onBallPickedUp?.Invoke();
     }
 }

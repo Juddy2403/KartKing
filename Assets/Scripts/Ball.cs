@@ -6,7 +6,7 @@ public class Ball : MonoBehaviour {
 
     private Collider  triggerCollider;
     private Rigidbody rigidbody;
-    public  Kart      Holder  { get; private set; } = null;
+    private Kart      holder = null;
     public  Kart      Shooter { get; private set; } = null;
     private Transform socket = null;
 
@@ -20,21 +20,21 @@ public class Ball : MonoBehaviour {
     }
 
     private void Update() {
-        if (Holder) {
+        if (holder) {
             transform.position = socket.transform.position;
         }
     }
 
     public void PickUp(GameObject kart) {
-        Holder  = kart.GetComponent<Kart>();
+        holder  = kart.GetComponent<Kart>();
         Shooter = null;
-        socket  = Holder.GetBallSocket();
+        socket  = holder.GetBallSocket();
 
         triggerCollider.enabled = false;
     }
 
     public void Drop() {
-        Holder = null;
+        holder = null;
         Shooter = null;
         socket  = null;
         
@@ -44,8 +44,8 @@ public class Ball : MonoBehaviour {
     
     public void Shoot(Vector3 direction, float force) {
         rigidbody.AddForce(direction * force, ForceMode.Impulse);
-        Shooter = Holder;
-        Holder  = null;
+        Shooter = holder;
+        holder  = null;
         
         // In order to avoid immediately picking up the ball you shot
         Invoke(nameof(EnableCollider), enableColliderAfter);
