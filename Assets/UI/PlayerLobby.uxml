@@ -4,6 +4,8 @@
     <ui:VisualElement style="flex-grow: 1; background-color: rgb(46, 56, 136);">
         <ui:Label text="Press A to Join/Start" class="text" style="right: 20px; bottom: 82px; position: absolute;"/>
         <ui:Label text="Press B to Exit" class="text" style="right: 20px; bottom: 21px; position: absolute;"/>
+        <ui:Label text="Press X to add a bot" class="text" style="right: 20px; bottom: auto; position: absolute; top: 28px;"/>
+        <ui:Label text="Press Y to remove a bot" class="text" style="right: 20px; bottom: auto; position: absolute; top: 87px;"/>
     </ui:VisualElement>
     <ui:VisualElement name="PlayerList" style="position: absolute; width: 432px; height: 561px; top: 92px; left: 158px;"/>
 </ui:UXML>
