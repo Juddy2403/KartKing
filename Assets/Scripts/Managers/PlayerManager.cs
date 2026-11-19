@@ -11,10 +11,14 @@ namespace Managers {
 
         public static PlayerManager Instance { get; private set; }
 
-        [SerializeField] private Color[] playerColors;
+        [SerializeField] private List<Color>  playerColors;
+        [SerializeField] private List<string> colorNames;
+
+        private Dictionary<Color, string> colorNamesDict = new Dictionary<Color, string>(MaxPlayers);
 
         private readonly PlayerSlot[] slots = new PlayerSlot[MaxPlayers];
-        private bool acceptingJoins => SceneManager.Instance.CurrentScene == SceneManager.SceneType.lobby;
+        public           string GetColorName(Color color) => colorNamesDict[color];
+        private          bool acceptingJoins => SceneManager.Instance.CurrentScene == SceneManager.SceneType.lobby;
 
         public IEnumerable<PlayerSlot> Players     => slots.Where(s => s != null);
         public int                     PlayerCount => Players.Count();
@@ -32,6 +36,12 @@ namespace Managers {
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            for (int i = 0; i < MaxPlayers; i++) {
+                colorNamesDict.Add(playerColors[i], colorNames[i]);
+            }
+
+            playerColors.Shuffle();
         }
 
         private void Start() {
@@ -123,7 +133,7 @@ namespace Managers {
         }
 
         private Color ColorFor(int index) {
-            if (playerColors != null && playerColors.Length > 0) {
+            if (playerColors != null && playerColors.Count > 0) {
                 return playerColors[index];
             }
 

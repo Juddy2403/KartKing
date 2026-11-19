@@ -1,3 +1,4 @@
+using Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,7 +12,8 @@ public class PlayerSlot
     public InputActionAsset Actions { get; private set; }
     public bool IsConnected { get; private set; }
 
-    public string DisplayName => IsBot ? $"Bot {Index + 1}" : $"Player {Index + 1}";
+    public string DisplayName => IsBot ? $"Bot {PlayerManager.Instance.GetColorName(Color)}" : 
+        $"{PlayerManager.Instance.GetColorName(Color)}";
 
     public PlayerSlot(int index, Color color, InputActionAsset template, InputDevice device)
     {

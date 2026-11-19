@@ -16,12 +16,7 @@ public class KartSpawner : MonoBehaviour
             return;
         }
 
-        for (int i = spawnPoints.Count - 1; i > 0; i--)
-        {
-            int randomIndex = Random.Range(0, i + 1);
-
-            (spawnPoints[i], spawnPoints[randomIndex]) = (spawnPoints[randomIndex], spawnPoints[i]);
-        }
+        spawnPoints.Shuffle();
         
         foreach (PlayerSlot slot in manager.Players)
         {
