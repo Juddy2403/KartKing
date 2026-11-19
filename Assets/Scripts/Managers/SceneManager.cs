@@ -53,7 +53,7 @@ namespace Managers {
         }
 
         public void LoadScene(SceneType sceneType) {
-            for (int i = 0; i <= scenes.Count; i++) {
+            for (int i = 0; i < scenes.Count; i++) {
                 if (scenes[i].type != sceneType) continue;
                 sceneIdx = i;
                 UnityEngine.SceneManagement.SceneManager.LoadScene(scenes[i].name);

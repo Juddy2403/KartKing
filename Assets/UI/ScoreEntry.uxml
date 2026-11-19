@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/StyleSheets/PlayerEntryBox.uss?fileID=7433441132597879392&amp;guid=db8674ac64efe9447b34d1b84c29c2cc&amp;type=3#PlayerEntryBox"/>
+    <UI.ScoreEntry class="box" style="position: relative; flex-wrap: nowrap; flex-direction: row; justify-content: flex-start; align-self: auto; align-content: auto; align-items: stretch; height: 36px; width: 333px;">
+        <ui:Label text="Red" name="Name" class="label" style="position: absolute; top: auto; left: 15px;"/>
+        <ui:Label text="50" name="Score" class="label" style="position: absolute; right: 15px;"/>
+    </UI.ScoreEntry>
+</ui:UXML>

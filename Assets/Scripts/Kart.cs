@@ -54,7 +54,7 @@ public class Kart : MonoBehaviour {
     }
 
     private void OnShootRequest(Vector3 direction, float force) {
-        if (ball.Holder == gameObject) {
+        if (ball.Holder == this) {
             ball.Shoot(direction, force);
             onBallShot?.Invoke();
         }
@@ -62,7 +62,7 @@ public class Kart : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("Ball")) {
-            if (crown.Holder == gameObject) {
+            if (crown.Holder == this) {
                 // If no one shot the ball, keep the crown
                 if (!ball.Shooter) return;
                 
@@ -77,11 +77,11 @@ public class Kart : MonoBehaviour {
             }
         }
         else if (other.gameObject.CompareTag("Crown")) {
-            if (ball.Holder == gameObject) {
+            if (ball.Holder == this) {
                 ball.Drop();
                 onBallShot?.Invoke();
             }
-            crown.PickUp(gameObject);
+            crown.PickUp(this);
             onCapturedCrown?.Invoke();
         }
     }

@@ -4,11 +4,11 @@ using UnityEngine;
 public class Ball : MonoBehaviour {
     [SerializeField] private float enableColliderAfter = 0.5f;
 
-    private Collider   triggerCollider;
-    private Rigidbody  rigidbody;
-    public  GameObject Holder { get; private set; } = null;
-    public  GameObject Shooter { get; private set; } = null;
-    private Transform  socket = null;
+    private Collider  triggerCollider;
+    private Rigidbody rigidbody;
+    public  Kart      Holder  { get; private set; } = null;
+    public  Kart      Shooter { get; private set; } = null;
+    private Transform socket = null;
 
     private void Awake() {
         triggerCollider = GetComponent<Collider>();
@@ -26,9 +26,9 @@ public class Ball : MonoBehaviour {
     }
 
     public void PickUp(GameObject kart) {
-        Holder  = kart;
+        Holder  = kart.GetComponent<Kart>();
         Shooter = null;
-        socket  = kart.GetComponent<Kart>().GetBallSocket();
+        socket  = Holder.GetBallSocket();
 
         triggerCollider.enabled = false;
     }

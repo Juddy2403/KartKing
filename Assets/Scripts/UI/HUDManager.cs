@@ -1,25 +1,35 @@
 using System;
+using Managers;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Managers {
+namespace UI {
     [RequireComponent(typeof(UIDocument))]
     public class HUDManager : MonoBehaviour {
-        private UIDocument hud;
-        private Label      timerText;
+        [SerializeField] private VisualTreeAsset scoreEntry;
+
+        private UIDocument        hud;
+        private Label             timerText;
+        private ScoreBoardElement scoreBoardElement;
 
         private void Awake() {
-            hud  = GetComponent<UIDocument>();
-            timerText = hud.rootVisualElement.Q<Label>("TimerText");
+            hud               = GetComponent<UIDocument>();
+            timerText         = hud.rootVisualElement.Q<Label>("TimerText");
+            scoreBoardElement = hud.rootVisualElement.Q<ScoreBoardElement>();
+
             TimeSpan timeSpan = TimeSpan.FromSeconds(GameManager.Instance.RoundTime);
             timerText.text = timeSpan.ToString(@"mm\:ss");
         }
 
         private void Start() {
+            scoreBoardElement.Initialize(scoreEntry, ScoreManager.Instance.Scores, true);
+
             GameManager.Instance.onTimeTick.AddListener(OnTimeTick);
+            ScoreManager.Instance.onScoreUpdate.AddListener(OnScoreUpdate);
         }
-        private void OnDestroy() {
-            GameManager.Instance.onTimeTick.RemoveListener(OnTimeTick);
+
+        private void OnScoreUpdate(ScoreData data) {
+            scoreBoardElement.UpdateScore(data, true);
         }
 
         private void OnTimeTick(float time) {

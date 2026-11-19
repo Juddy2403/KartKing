@@ -1,19 +1,17 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Collider))]
 public class Crown : MonoBehaviour {
     [SerializeField] private float enableColliderAfter = 0.5f;
 
-    private Collider   triggerCollider;
-    public  GameObject Holder  { get; private set; } = null;
-    private Transform  socket = null;
+    public  UnityEvent<Kart> onPickUp;
+    private Collider         triggerCollider;
+    public  Kart             Holder  { get; private set; } = null;
+    private Transform        socket = null;
 
     private void Awake() {
         triggerCollider = GetComponent<Collider>();
-    }
-
-    private void EnableCollider() {
-        triggerCollider.enabled = true;
     }
 
     private void Update() {
@@ -22,10 +20,14 @@ public class Crown : MonoBehaviour {
         }
     }
 
-    public void PickUp(GameObject kart) {
-        Holder = kart;
-        socket = kart.GetComponent<Kart>().GetCrownSocket();
-
+    private void OnDestroy() {
+        onPickUp.RemoveAllListeners();
+    }
+    public void PickUp(Kart kart) {
+        Holder = kart.GetComponent<Kart>();
+        socket = Holder.GetCrownSocket();
+        onPickUp.Invoke(kart);
+        
         triggerCollider.enabled = false;
     }
 }

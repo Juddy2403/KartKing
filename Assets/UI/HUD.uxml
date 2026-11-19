@@ -1,6 +1,8 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/StyleSheets/PlayerEntryBox.uss?fileID=7433441132597879392&amp;guid=db8674ac64efe9447b34d1b84c29c2cc&amp;type=3#PlayerEntryBox"/>
+    <Style src="project://database/Assets/UI/StyleSheets/Global.uss?fileID=7433441132597879392&amp;guid=30cc4b917a8d4e24fa2cc0338dc81bef&amp;type=3#Global"/>
     <ui:VisualElement style="flex-grow: 1;">
         <ui:Label text="0:20" name="TimerText" class="label"/>
     </ui:VisualElement>
+    <UI.ScoreBoard style="top: 23px; left: 18px; position: absolute; width: 336px; height: 282px;"/>
 </ui:UXML>

@@ -1,8 +1,8 @@
-using UI;
+using Managers;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Managers {
+namespace UI {
     [RequireComponent(typeof(UIDocument))]
     public class LobbyUIManager : MonoBehaviour {
         [SerializeField] private VisualTreeAsset entry;
