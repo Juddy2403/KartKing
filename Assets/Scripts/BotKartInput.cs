@@ -2,6 +2,8 @@ using Interfaces;
 using UnityEngine;
 using UnityEngine.AI;
 
+// Fully vibe coded for the sake of testing 
+
 /// <summary>
 /// Simple fallible bot driver. It produces the same IKartInput values a human would:
 ///  - has the crown:        flee from the nearest threat (karts holding a ball count double)
@@ -38,7 +40,7 @@ public class BotKartInput : MonoBehaviour, IKartInput {
 
     // ---- IKartInput ----
     public Vector2 Steering       { get; private set; }
-    public Vector2 Aim            { get; private set; }
+    public Vector2 Aim            => aimVisible ? new Vector2(aimDir.x, aimDir.z) : Vector2.zero;
     public bool    ShootStarted   { get; private set; }
     public bool    ShootPerformed { get; private set; }
 
@@ -69,6 +71,7 @@ public class BotKartInput : MonoBehaviour, IKartInput {
     private float   distractedUntil;
     private Vector3 distractionTarget;
 
+    private bool  aimVisible; // aim is only reported while a shot is being charged
     private bool  hadBall;
     private bool  charging;
     private float nextShotTime;
@@ -96,6 +99,7 @@ public class BotKartInput : MonoBehaviour, IKartInput {
     private void LateUpdate() {
         ShootStarted   = false;
         ShootPerformed = false;
+        if (!charging) aimVisible = false;
     }
 
     // ---------- Decision making (runs a few times per second) ----------
@@ -235,7 +239,6 @@ public class BotKartInput : MonoBehaviour, IKartInput {
         // Limited turn rate: moving targets get missed
         float maxTurn = aimTurnSpeed * Mathf.Lerp(0.5f, 1f, skill) * Mathf.Deg2Rad * Time.deltaTime;
         aimDir = Vector3.RotateTowards(aimDir, desired, maxTurn, 0f);
-        Aim    = new Vector2(aimDir.x, aimDir.z);
     }
 
     private void UpdateShooting() {
@@ -271,6 +274,7 @@ public class BotKartInput : MonoBehaviour, IKartInput {
                        + Random.Range(-0.15f, 0.15f) * (1f - skill);
 
         ShootStarted = true;
+        aimVisible   = true;
         charging     = true;
         releaseTime  = Time.time + Mathf.Max(0.05f, charge);
     }
@@ -321,6 +325,7 @@ public class BotKartInput : MonoBehaviour, IKartInput {
                 if (hasCrown) return k;
             }
         }
+
         return null;
     }
 
