@@ -25,11 +25,21 @@ public class Ball : MonoBehaviour {
         }
     }
 
-    public void PickUp(GameObject kart, Transform ballSocket) {
-        Holder = kart;
-        socket = ballSocket;
+    public void PickUp(GameObject kart) {
+        Holder  = kart;
+        Shooter = null;
+        socket  = kart.GetComponent<Kart>().GetBallSocket();
 
         triggerCollider.enabled = false;
+    }
+
+    public void Drop() {
+        Holder = null;
+        Shooter = null;
+        socket  = null;
+        
+        // In order to avoid immediately picking up the ball you shot
+        Invoke(nameof(EnableCollider), enableColliderAfter);
     }
     
     public void Shoot(Vector3 direction, float force) {
