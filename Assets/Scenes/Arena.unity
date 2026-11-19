@@ -8716,6 +8716,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6386066177628981329, guid: 1fe74b7e466eba54ba4e8daa2385ab15, type: 3}
+      propertyPath: spawnVFX
+      value: 
+      objectReference: {fileID: 7177991128484655659, guid: 59a35ab9f68edff40b6e5332bed330f5, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8826,6 +8830,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3101013349662307738, guid: 6eb55f405f723bc45afab3f5e5e90673, type: 3}
+      propertyPath: spawnVFX
+      value: 
+      objectReference: {fileID: 7177991128484655659, guid: 47bf7d9e34e423648826c68d24ed375e, type: 3}
     - target: {fileID: 4488867782196238895, guid: 6eb55f405f723bc45afab3f5e5e90673, type: 3}
       propertyPath: m_Name
       value: BallSpawner

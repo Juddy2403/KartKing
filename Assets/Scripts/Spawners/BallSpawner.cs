@@ -9,6 +9,8 @@ namespace Spawners {
         [SerializeField] private GameObject  spawnVFX;
         [SerializeField] private Vector3     spawnOffset;
 
+        [SerializeField] private float spawnBallsAfter = 4f;
+
         [SerializeField] private int ballsAtMinPlayers = 1;
         [SerializeField] private int ballsAtMaxPlayers = 7;
 
@@ -22,8 +24,8 @@ namespace Spawners {
         private          float            timeRemaining = float.PositiveInfinity;
 
         private void Start() {
-            SpawnBalls();
             GameManager.Instance.onTimeTick.AddListener(OnTimeTick);
+            Invoke(nameof(SpawnBalls), spawnBallsAfter);
         }
 
         private void OnTimeTick(float seconds) {

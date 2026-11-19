@@ -4,6 +4,7 @@ namespace Spawners {
     public class CrownSpawner : MonoBehaviour {
         [SerializeField] private BoxCollider spawnBounds;
         [SerializeField] private GameObject  crownPrefab;
+        [SerializeField] private GameObject  spawnVFX;
         [SerializeField] private Vector3     spawnOffset;
 
         private void Awake() {
@@ -12,6 +13,7 @@ namespace Spawners {
             }
 
             Instantiate(crownPrefab, pos + spawnOffset, Quaternion.identity);
+            Instantiate(spawnVFX, pos + spawnOffset, Quaternion.identity);
         }
     }
 }
