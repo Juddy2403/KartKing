@@ -10,15 +10,17 @@ namespace Managers {
 
     public class ScoreManager : MonoBehaviour {
         public static ScoreManager Instance;
-        
+
         [SerializeField] private int scorePerSecond;
+        [SerializeField] private int scoreMultiplier = 5;
 
         public List<ScoreData>       Scores { get; private set; } = new List<ScoreData>();
         public UnityEvent<ScoreData> onScoreUpdate = new();
 
         private Crown crown;
         private int   crownHolderIndex = -1;
-        private float pickUpTime       = 0f;
+        private int   lastReportedScore;
+        private float pickUpTime = 0f;
 
         private void Start() {
             foreach (var player in PlayerManager.Instance.Players) {
@@ -35,7 +37,8 @@ namespace Managers {
                 break;
             }
 
-            pickUpTime = Time.time;
+            lastReportedScore = 0;
+            pickUpTime        = Time.time;
         }
 
         private void Update() {
@@ -43,17 +46,24 @@ namespace Managers {
 
             var timeSincePickup = Time.time - pickUpTime;
             var scoreData       = Scores[crownHolderIndex];
-            
-            scoreData.score          = Mathf.FloorToInt(scorePerSecond * timeSincePickup);
+
+            int newScore = Mathf.FloorToInt(scorePerSecond * timeSincePickup);
+
+            if (newScore < lastReportedScore + scoreMultiplier)
+                return;
+
+            scoreData.score          = newScore;
             Scores[crownHolderIndex] = scoreData;
-            
+
+            lastReportedScore = newScore;
+
             onScoreUpdate.Invoke(scoreData);
         }
 
         private void Awake() {
             crown = FindFirstObjectByType<Crown>();
             if (!crown) Debug.LogError("No crown found in scene");
-            
+
             if (Instance != null && Instance != this) {
                 Destroy(gameObject);
                 return;
@@ -66,5 +76,6 @@ namespace Managers {
         private void OnDestroy() {
             onScoreUpdate.RemoveAllListeners();
         }
+
     }
 }

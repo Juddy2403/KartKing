@@ -44,7 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e77f21f429e2489192b837fc466160ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Managers.ScoreManager
-  scorePerSecond: 10
+  scorePerSecond: 5
+  scoreMultiplier: 5
   onScoreUpdate:
     m_PersistentCalls:
       m_Calls: []
