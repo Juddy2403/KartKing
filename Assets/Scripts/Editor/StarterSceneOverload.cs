@@ -5,7 +5,7 @@ namespace Editor {
     [InitializeOnLoad]
     public static class StartScene
     {
-        private const string START_SCENE = "Assets/Scenes/PlayerLobby.unity";
+        private const string START_SCENE = "Assets/Scenes/Menu.unity";
 
         static StartScene()
         {

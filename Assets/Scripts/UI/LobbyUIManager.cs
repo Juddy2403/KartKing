@@ -6,11 +6,11 @@ namespace UI {
     [RequireComponent(typeof(UIDocument))]
     public class LobbyUIManager : MonoBehaviour {
         [SerializeField] private VisualTreeAsset entry;
-        private                  UIDocument      uiDoc;
-        private                  VisualElement   playerList;
+
+        private VisualElement playerList;
 
         private void Awake() {
-            uiDoc      = GetComponent<UIDocument>();
+            var uiDoc = GetComponent<UIDocument>();
             playerList = uiDoc.rootVisualElement.Q<VisualElement>("PlayerList");
         }
 

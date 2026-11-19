@@ -1,0 +1,9 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/StyleSheets/Global.uss?fileID=7433441132597879392&amp;guid=30cc4b917a8d4e24fa2cc0338dc81bef&amp;type=3#Global"/>
+    <ui:VisualElement style="flex-grow: 1; background-color: rgb(46, 56, 136);"/>
+    <ui:VisualElement style="flex-grow: 1; position: absolute; left: 273px; top: 237px; align-self: flex-start; align-items: flex-start; width: 510px; height: 509px;">
+        <ui:Button text="Start" selectable="true" name="Start" class="text button"/>
+        <ui:Button text="Tutorial&#10;" selectable="true" name="Tutorial" class="text button"/>
+        <ui:Button text="Quit&#10;" selectable="true" name="Quit" class="text button"/>
+    </ui:VisualElement>
+</ui:UXML>
