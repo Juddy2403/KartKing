@@ -247,7 +247,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4381940550730515071
 Transform:
   m_ObjectHideFlags: 0
@@ -421,6 +421,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07f7c85535120594ba0629e328868835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Kart
+  ballMesh: {fileID: 3679237329704858723}
+  crownMesh: {fileID: 5190453043283886988}
 --- !u!114 &1234971005805377559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,8 +450,11 @@ MonoBehaviour:
   aimIndicator: {fileID: 2611159891044689182}
   indicatorLength: 5
   shootingForce: 20
-  ballMesh: {fileID: 3679237329704858723}
+  ballShootingPos: {fileID: 4381940550730515071}
   ballPrefab: {fileID: 7037266718389524947, guid: 237d41d0cabcd6e46b28352286b81237, type: 3}
+  onBallShot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1007694581537107618
 PrefabInstance:
   m_ObjectHideFlags: 0
