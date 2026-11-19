@@ -16,24 +16,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Accelerate",
-                    "type": "Button",
-                    "id": "05e69c0c-aa3e-4b4b-8ebe-c35ff626e97e",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Back",
-                    "type": "Button",
-                    "id": "e574f0ee-4273-4234-b364-987538e69fc7",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Aiming",
                     "type": "Value",
                     "id": "7454f6d8-63c9-4b09-88e5-b55d89e0a712",
@@ -78,7 +60,7 @@
                 {
                     "name": "up",
                     "id": "027dec76-70dd-4b6a-b489-c1587aa8d6bc",
-                    "path": "",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -89,7 +71,7 @@
                 {
                     "name": "down",
                     "id": "8b66210a-1dea-42e7-996b-ccdff0be5633",
-                    "path": "",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -118,50 +100,6 @@
                     "action": "Steering",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "2b140aed-a5a3-4476-a0e1-615f7071acbf",
-                    "path": "<Gamepad>/leftTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Accelerate",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "51cdfdcd-fd7e-4db4-bf56-2a64f5e204e0",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Accelerate",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "28bd3aa9-0135-4ad2-97c6-96b23fde7fce",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Back",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e447a5fa-36cf-4bd7-9c82-66d47093ba29",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Back",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 },
                 {
                     "name": "",

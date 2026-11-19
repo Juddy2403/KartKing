@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public interface IKartInput {
-    float          Steering   { get; } // -1 .. 1
-    bool           Accelerate { get; }
-    bool           Brake      { get; }
-    public Vector2 Aim        { get; }
-    public bool    Shoot      { get; }
+namespace Interfaces {
+    public interface IKartInput {
+        Vector2        Steering   { get; } // -1 .. 1
+        public Vector2 Aim        { get; }
+        public bool    Shoot      { get; }
+    }
 }

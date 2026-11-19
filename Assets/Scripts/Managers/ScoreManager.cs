@@ -22,10 +22,24 @@ namespace Managers {
         private int   lastReportedScore;
         private float pickUpTime = 0f;
 
-        private void Start() {
+        private void Awake() {
+            crown = FindFirstObjectByType<Crown>();
+            if (!crown) Debug.LogError("No crown found in scene");
+
+            if (Instance != null && Instance != this) {
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            
             foreach (var player in PlayerManager.Instance.Players) {
                 Scores.Add(new ScoreData { player = player, score = 0 });
             }
+        }
+
+        private void Start() {
             SceneManager.Instance.OnSceneChange.AddListener(OnSceneChange);
             crown.onPickUp.AddListener(OnCrownPickup);
         }
@@ -65,19 +79,6 @@ namespace Managers {
             lastReportedScore = newScore;
 
             onScoreUpdate.Invoke(scoreData);
-        }
-
-        private void Awake() {
-            crown = FindFirstObjectByType<Crown>();
-            if (!crown) Debug.LogError("No crown found in scene");
-
-            if (Instance != null && Instance != this) {
-                Destroy(gameObject);
-                return;
-            }
-
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
 
         private void OnDestroy() {

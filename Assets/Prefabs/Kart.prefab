@@ -309,13 +309,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   acceleration: 20
-  backingAcceleration: 15
-  brakeDeceleration: 25
-  maxSpeed: 12
-  maxBacking: 5
-  drag: 2
-  steeringSpeed: 100
-  minSteeringFactor: 0.2
+  brakeDeceleration: 3
+  maxSpeed: 14
+  drag: 1.73
+  deadzone: 0.1
+  steeringSpeed: 180
+  grip: 3.27
 --- !u!114 &1670868977749714064
 MonoBehaviour:
   m_ObjectHideFlags: 0

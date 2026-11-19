@@ -1,101 +1,84 @@
-using System;
+using Interfaces;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
-public class MovementController : MonoBehaviour
-{
-    [Header("Movement")]
-    [SerializeField] private float acceleration        = 15f;
-    [SerializeField] private float backingAcceleration = 5f;
-    [SerializeField] private float brakeDeceleration   = 25f;
-    [SerializeField] private float maxSpeed            = 20f;
-    [SerializeField] private float maxBacking          = 5f;
-    [SerializeField] private float drag                = 2f;
+[RequireComponent(typeof(Rigidbody), typeof(IKartInput), typeof(KartEffects))]
+public class MovementController : MonoBehaviour {
+    [Header("Movement")] [SerializeField] private float acceleration      = 15f;
+    [SerializeField]                      private float brakeDeceleration = 25f;
+    [SerializeField]                      private float maxSpeed          = 20f;
+    [SerializeField]                      private float drag              = 2f;
+    [SerializeField, Range(0f, 0.5f)]     private float deadzone          = 0.1f;
 
-    [Header("Steering")]
-    [SerializeField] private float steeringSpeed     = 100f;
-    [SerializeField] private float minSteeringFactor = 0.2f;
+    [Header("Steering")] [SerializeField] private float steeringSpeed = 100f;
 
-    private Rigidbody     rigidBody;
-    private IKartInput    input;
-    private MovementState movementState;
-    private void Awake() => rigidBody = GetComponent<Rigidbody>();
+    [Header("Drift")] [Tooltip("How fast sideways sliding dies out. Lower = more drift.")] [SerializeField]
+    private float grip = 5f;
+
+    private Rigidbody   rigidBody;
+    private IKartInput  input;
+    private KartEffects effects;
+
+    private void Awake() {
+        rigidBody = GetComponent<Rigidbody>();
+        effects = GetComponent<KartEffects>();
+    }
 
     // Start (not Awake) so Kart.Initialize has already attached the right input source
     private void Start() => input = GetComponent<IKartInput>();
 
-    private enum MovementState {
-        idle,
-        accelerate,
-        brake,
-        backing
-    }
-    private void FixedUpdate()
-    {
-        float steering        = input.Steering;
-        bool  accelerateValue = input.Accelerate;
-        bool  brakeValue      = input.Brake;
-        
-        Vector3 velocity       = rigidBody.linearVelocity;
-        float   forwardSpeed   = Vector3.Dot(velocity, transform.forward);
+    private void FixedUpdate() {
+        Vector2 move       = input.Steering;
+        float   magnitude  = Mathf.Min(move.magnitude, 1f);
+        bool    hasInput   = magnitude > deadzone;
+        Vector3 desiredDir = hasInput ? new Vector3(move.x, 0f, move.y).normalized : Vector3.zero;
 
-        movementState = !accelerateValue && !brakeValue ? MovementState.idle :
-            brakeValue && forwardSpeed > 0              ? MovementState.brake :
-            brakeValue                                  ? MovementState.backing :
-                                                          MovementState.accelerate;
-        
-        UpdateForwardSpeed(ref forwardSpeed);
+        Quaternion rotation = Steer(desiredDir, hasInput);
 
-        // Update velocity while preserving vertical velocity
-        Vector3 verticalVelocity = Vector3.Project(velocity, Vector3.up);
-        // lateral = Vector3.Lerp(lateral, Vector3.zero, grip * Time.fixedDeltaTime) and lower grip -> on ice, for drift
-        rigidBody.linearVelocity = transform.forward * forwardSpeed + verticalVelocity;
+        Vector3 velocity = rigidBody.linearVelocity;
+        Vector3 vertical = Vector3.Project(velocity, Vector3.up);
+        Vector3 planar   = velocity - vertical;
 
-        if (Mathf.Abs(forwardSpeed) > 0.1f) {
-            Steer(steering, forwardSpeed);
-        }
+        Vector3 forward = rotation * Vector3.forward;
+        Vector3 right   = rotation * Vector3.right;
+
+        float forwardSpeed = Vector3.Dot(planar, forward);
+        float lateralSpeed = Vector3.Dot(planar, right);
+
+        forwardSpeed =  UpdateForwardSpeed(forwardSpeed, forward, desiredDir, magnitude, hasInput);
+        lateralSpeed *= Mathf.Exp(-grip * effects.GripMultiplier * Time.fixedDeltaTime);
+
+        rigidBody.linearVelocity = forward * forwardSpeed + right * lateralSpeed + vertical;
     }
 
-    private void UpdateForwardSpeed(ref float forwardSpeed) {
-        float targetSpeed;
-        float speedChange;
-        
-        switch (movementState) {
-            case MovementState.idle:
-                targetSpeed = 0f;
-                speedChange = drag;
-                break;
-            case MovementState.accelerate:
-                targetSpeed = maxSpeed;
-                speedChange = acceleration;
-                break;
-            case MovementState.brake:
-                targetSpeed = -maxBacking;
-                speedChange = brakeDeceleration;
-                break;
-            case MovementState.backing:
-                targetSpeed = -maxBacking;
-                speedChange = backingAcceleration;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
+    private Quaternion Steer(Vector3 desiredDir, bool hasInput) {
+        float yaw = rigidBody.rotation.eulerAngles.y;
+
+        if (hasInput) {
+            float targetYaw = Mathf.Atan2(desiredDir.x, desiredDir.z) * Mathf.Rad2Deg;
+            yaw = Mathf.MoveTowardsAngle(yaw, targetYaw, steeringSpeed * Time.fixedDeltaTime);
         }
 
-        forwardSpeed = Mathf.MoveTowards(
-            forwardSpeed,
-            targetSpeed,
-            speedChange * Time.fixedDeltaTime
-        );
+        Quaternion rotation = Quaternion.Euler(0f, yaw, 0f);
+        rigidBody.MoveRotation(rotation);
+        return rotation;
     }
 
-    private void Steer(float steering, float forwardSpeed) {
-        if (Mathf.Abs(forwardSpeed) < 0.1f) return;   // no turning on the spot
+    private float UpdateForwardSpeed(
+        float   forwardSpeed,
+        Vector3 forward,
+        Vector3 desiredDir,
+        float   magnitude,
+        bool    hasInput) {
+        
+        float targetSpeed = 0f;
+        float speedChange = drag;
 
-        // Less steering at low speed, full at top speed 
-        float speedFactor = Mathf.Max(minSteeringFactor, Mathf.Abs(forwardSpeed) / maxSpeed);
-        float direction   = Mathf.Sign(forwardSpeed); // inverted when reversing
+        if (hasInput) {
+            float alignment = Mathf.Clamp01(Vector3.Dot(forward, desiredDir));
+            targetSpeed = maxSpeed * effects.SpeedMultiplier * magnitude * alignment;
+            speedChange = targetSpeed > forwardSpeed ? acceleration : brakeDeceleration;
+        }
 
-        float steeringAmount = steering * steeringSpeed * speedFactor * direction * Time.fixedDeltaTime;
-        rigidBody.MoveRotation(rigidBody.rotation * Quaternion.Euler(0f, steeringAmount, 0f));
+        return Mathf.MoveTowards(forwardSpeed, targetSpeed, speedChange * Time.fixedDeltaTime);
     }
 }
