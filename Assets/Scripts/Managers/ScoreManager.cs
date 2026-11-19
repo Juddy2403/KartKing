@@ -23,9 +23,6 @@ namespace Managers {
         private float pickUpTime = 0f;
 
         private void Awake() {
-            crown = FindFirstObjectByType<Crown>();
-            if (!crown) Debug.LogError("No crown found in scene");
-
             if (Instance != null && Instance != this) {
                 Destroy(gameObject);
                 return;
@@ -40,6 +37,9 @@ namespace Managers {
         }
 
         private void Start() {
+            crown = FindFirstObjectByType<Crown>();
+            if (!crown) Debug.LogError("No crown found in scene");
+            
             SceneManager.Instance.OnSceneChange.AddListener(OnSceneChange);
             crown.onPickUp.AddListener(OnCrownPickup);
         }
