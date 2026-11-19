@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using Managers;
 using UnityEngine;
 
 public class KartSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject kartPrefab;
-    [SerializeField] private Transform[] spawnPoints;
+    [SerializeField] private GameObject      kartPrefab;
+    [SerializeField] private List<Transform> spawnPoints;
 
     private void Start()
     {
@@ -15,9 +16,16 @@ public class KartSpawner : MonoBehaviour
             return;
         }
 
+        for (int i = spawnPoints.Count - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+
+            (spawnPoints[i], spawnPoints[randomIndex]) = (spawnPoints[randomIndex], spawnPoints[i]);
+        }
+        
         foreach (PlayerSlot slot in manager.Players)
         {
-            Transform point = spawnPoints[slot.Index % spawnPoints.Length];
+            Transform point = spawnPoints[slot.Index % spawnPoints.Count];
             GameObject go = Instantiate(kartPrefab, point.position, point.rotation);
             go.name = slot.DisplayName;
             go.GetComponent<Kart>().Initialize(slot);
