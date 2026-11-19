@@ -5,19 +5,26 @@ using UnityEngine.Events;
 [RequireComponent(typeof(IKartInput), typeof(KartEffects))]
 public class ShootingController : MonoBehaviour {
     [SerializeField] private LineRenderer aimIndicator;
-    [SerializeField] private float        indicatorLength;
-    [SerializeField] private float        shootingForce;
 
+    [SerializeField] private float minIndicatorLength = 5;
+    [SerializeField] private float maxIndicatorLength = 10;
+    [SerializeField] private float minShootingForce   = 20;
+    [SerializeField] private float maSshootingForce   = 40;
+    [SerializeField] private float chargeTime         = 3f;
+
+    private float chargeStartTime;
+    private bool  isCharging;
+    
     /// <summary>
     /// ShootRequest(direction, force)
     /// </summary>
     public UnityEvent<Vector3, float> shootRequest;
 
-    private IKartInput input;
+    private IKartInput  input;
     private KartEffects effects;
 
     private void Start() {
-        input = GetComponent<IKartInput>();
+        input   = GetComponent<IKartInput>();
         effects = GetComponent<KartEffects>();
     }
 
@@ -26,25 +33,40 @@ public class ShootingController : MonoBehaviour {
     }
 
     private void Update() {
-        if (!effects.HoldsBall) {
+        if (!effects.HoldsBall)
+        {
+            aimIndicator.enabled = false;
+            isCharging           = false;
+            return;
+        }
+
+        Vector2 aim          = input.Aim;
+        Vector3 aimDirection = new Vector3(aim.x, 0f, aim.y);
+
+        if (aimDirection.magnitude < 0.1f) {
             aimIndicator.enabled = false;
             return;
         }
-        
-        Vector2 aim        = input.Aim;
-        bool    isShooting = input.Shoot;
 
-        Vector3 aimDirection = new Vector3(aim.x, 0f, aim.y);
+        aimDirection.Normalize();
+        aimIndicator.enabled = true;
 
-        if (Vector3.Magnitude(aimDirection) < 0.1f) {
-            aimIndicator.enabled = false;
+        if (input.ShootStarted) {
+            isCharging      = true;
+            chargeStartTime = Time.time;
         }
-        else {
-            aimIndicator.enabled = true;
-            aimIndicator.SetPosition(0, aimIndicator.transform.position);
-            aimIndicator.SetPosition(1, aimIndicator.transform.position + aimDirection * indicatorLength);
 
-            if (isShooting) shootRequest?.Invoke(aimDirection, shootingForce);
+        var charge = isCharging ? Mathf.Clamp01((Time.time - chargeStartTime) / chargeTime) : 0f;
+
+        float indicatorLength = Mathf.Lerp(minIndicatorLength, maxIndicatorLength, charge);
+        float shootingForce = Mathf.Lerp(minShootingForce, maSshootingForce, charge);
+
+        aimIndicator.SetPosition(0, aimIndicator.transform.position);
+        aimIndicator.SetPosition(1, aimIndicator.transform.position + aimDirection * indicatorLength);
+
+        if (input.ShootPerformed && isCharging) {
+            shootRequest?.Invoke(aimDirection, shootingForce);
+            isCharging = false;
         }
     }
 }
