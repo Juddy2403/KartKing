@@ -7,26 +7,27 @@ public class Kart : MonoBehaviour {
     [SerializeField] private Transform crownSocket;
 
     public Transform GetCrownSocket() => crownSocket;
-    public Transform GetBallSocket() => ballSocket;
-    
-    
+    public Transform GetBallSocket()  => ballSocket;
+
+
     public UnityEvent onCapturedCrown;
     public UnityEvent onLostCrown;
 
-    public  UnityEvent onBallPickedUp;
-    public  UnityEvent onBallShot;
-    public  PlayerSlot Slot { get; private set; }
-    private Ball       ball;
-    private Crown      crown;
+    public  UnityEvent  onBallPickedUp;
+    public  UnityEvent  onBallShot;
+    public  PlayerSlot  Slot { get; private set; }
+    private KartEffects kartEffects;
+    private Ball        ball;
+    private Crown       crown;
 
     [SerializeField] private Renderer targetRenderer;
     [SerializeField] private int      materialIndex = 1;
 
-    private void SetColor(Color color)
-    {
+    private void SetColor(Color color) {
         Material[] materials = targetRenderer.materials;
         materials[materialIndex].color = color;
     }
+
     public void Initialize(PlayerSlot slot) {
         Slot = slot;
 
@@ -55,6 +56,8 @@ public class Kart : MonoBehaviour {
         crown = FindFirstObjectByType<Crown>();
         if (!crown) Debug.LogError("No crown found in scene");
 
+        kartEffects = GetComponent<KartEffects>();
+        
         GetComponent<ShootingController>().shootRequest.AddListener(OnShootRequest);
     }
 
@@ -70,7 +73,8 @@ public class Kart : MonoBehaviour {
             if (crown.Holder == this) {
                 // If no one shot the ball, keep the crown
                 if (!ball.Shooter) return;
-                
+                if(kartEffects.HasImmunity) return;
+
                 crown.PickUp(ball.Shooter);
                 onLostCrown?.Invoke();
                 ball.PickUp(gameObject);
@@ -86,6 +90,7 @@ public class Kart : MonoBehaviour {
                 ball.Drop();
                 onBallShot?.Invoke();
             }
+
             crown.PickUp(this);
             onCapturedCrown?.Invoke();
         }
