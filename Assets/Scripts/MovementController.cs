@@ -5,7 +5,7 @@ using UnityEngine;
 public class MovementController : MonoBehaviour
 {
     [Header("Movement")]
-    [SerializeField] private float acceleration = 15f;
+    [SerializeField] private float acceleration        = 15f;
     [SerializeField] private float backingAcceleration = 5f;
     [SerializeField] private float brakeDeceleration   = 25f;
     [SerializeField] private float maxSpeed            = 20f;
@@ -13,7 +13,7 @@ public class MovementController : MonoBehaviour
     [SerializeField] private float drag                = 2f;
 
     [Header("Steering")]
-    [SerializeField] private float steeringSpeed = 100f;
+    [SerializeField] private float steeringSpeed     = 100f;
     [SerializeField] private float minSteeringFactor = 0.2f;
 
     private Rigidbody     rigidBody;

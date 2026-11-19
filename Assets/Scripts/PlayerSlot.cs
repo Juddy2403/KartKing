@@ -3,9 +3,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerSlot
 {
-    public int Index { get; }
-    public Color Color { get; }
-    public bool IsBot { get; }
+    public int   Index    { get; }
+    public Color Color    { get; }
+    public bool  IsBot    { get; }
+    
     public InputDevice Device { get; private set; }
     public InputActionAsset Actions { get; private set; }
     public bool IsConnected { get; private set; }

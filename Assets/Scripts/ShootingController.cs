@@ -1,30 +1,35 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(IKartInput), typeof(KartEffects))]
 public class ShootingController : MonoBehaviour {
     [SerializeField] private LineRenderer aimIndicator;
     [SerializeField] private float        indicatorLength;
     [SerializeField] private float        shootingForce;
-    [SerializeField] private Transform    ballShootingPos;
-    [SerializeField] private GameObject   ballPrefab;
 
-    public  UnityEvent onBallShot;
+    /// <summary>
+    /// ShootRequest(direction, force)
+    /// </summary>
+    public UnityEvent<Vector3, float> shootRequest;
+
     private IKartInput input;
+    private KartEffects effects;
 
     private void Start() {
-        input   = GetComponent<IKartInput>();
+        input = GetComponent<IKartInput>();
+        effects = GetComponent<KartEffects>();
     }
 
-    private void OnEnable() {
-        aimIndicator.enabled = true;
-    }
-
-    private void OnDisable() {
-        aimIndicator.SetPosition(1, Vector3.zero);
-        aimIndicator.enabled = false;
+    private void OnDestroy() {
+        shootRequest.RemoveAllListeners();
     }
 
     private void Update() {
+        if (!effects.HoldsBall) {
+            aimIndicator.enabled = false;
+            return;
+        }
+        
         Vector2 aim        = input.Aim;
         bool    isShooting = input.Shoot;
 
@@ -37,16 +42,8 @@ public class ShootingController : MonoBehaviour {
             aimIndicator.enabled = true;
             aimIndicator.SetPosition(0, aimIndicator.transform.position);
             aimIndicator.SetPosition(1, aimIndicator.transform.position + aimDirection * indicatorLength);
-            
-            if (isShooting) ShootBall(aimDirection);
-        }
-    }
 
-    private void ShootBall(Vector3 aimDirection) {
-        GameObject ball = Instantiate(ballPrefab);
-        ball.transform.position = ballShootingPos.position;
-        ball.GetComponent<Rigidbody>().AddForce(aimDirection * shootingForce, ForceMode.Impulse);
-            
-        onBallShot?.Invoke();
+            if (isShooting) shootRequest?.Invoke(aimDirection, shootingForce);
+        }
     }
 }
