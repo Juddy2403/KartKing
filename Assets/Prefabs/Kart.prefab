@@ -370,7 +370,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShootingController
   aimIndicator: {fileID: 2611159891044689182}
   indicatorLength: 5
-  shootingForce: 20
+  shootingForce: 30
   shootRequest:
     m_PersistentCalls:
       m_Calls: []
