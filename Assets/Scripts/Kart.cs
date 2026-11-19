@@ -19,13 +19,18 @@ public class Kart : MonoBehaviour {
     private Ball       ball;
     private Crown      crown;
 
+    [SerializeField] private Renderer targetRenderer;
+    [SerializeField] private int      materialIndex = 1;
 
+    private void SetColor(Color color)
+    {
+        Material[] materials = targetRenderer.materials;
+        materials[materialIndex].color = color;
+    }
     public void Initialize(PlayerSlot slot) {
         Slot = slot;
 
-        foreach (Renderer renderer in GetComponentsInChildren<Renderer>()) {
-            renderer.material.color = slot.Color;
-        }
+        SetColor(Slot.Color);
 
         if (slot.IsBot) {
             // gameObject.AddComponent<BotKartInput>();   // your bot implements IKartInput
