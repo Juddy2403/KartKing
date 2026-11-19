@@ -4,11 +4,13 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Kart))]
 public class KartEffects : MonoBehaviour {
     [SerializeField] private float      crownSpeedMultiplier = 1.5f;
+    [SerializeField] private float      mudSpeedMultiplier = 0.4f;
     [SerializeField] private float      iceGripMultiplier = 0.4f;
     [Tooltip("Immunity duration right after picking up the crown")]
     [SerializeField] private float      immunityTime = 1.5f;
     [SerializeField] private GameObject shieldObject;
     public                   bool       HoldsBall       { get; private set; } = false;
+    public                   bool       HasCrown        { get; private set; } = false;
     public                   bool       HasImmunity     { get; private set; } = false;
     public                   float      SpeedMultiplier { get; set; }         = 1f;
     public                   float      GripMultiplier  { get; set; }         = 1f;
@@ -24,7 +26,12 @@ public class KartEffects : MonoBehaviour {
     }
 
     private void Update() {
-        GripMultiplier = IsOnIce() ? iceGripMultiplier : 1f;
+        GripMultiplier = CheckTerrainFor("Ice") ? iceGripMultiplier : 1f;
+        
+        if (CheckTerrainFor("Mud")) {
+            SpeedMultiplier = HasCrown ? crownSpeedMultiplier * mudSpeedMultiplier : mudSpeedMultiplier;
+        } else SpeedMultiplier = HasCrown ? crownSpeedMultiplier : 1f;
+            
         HandleImmunity();
     }
 
@@ -38,10 +45,12 @@ public class KartEffects : MonoBehaviour {
     }
 
     private void OnLostCrown() {
+        HasCrown = false;
         SpeedMultiplier = 1f;
     }
 
     private void OnCapturedCrown() {
+        HasCrown        = true;
         SpeedMultiplier = crownSpeedMultiplier;
         HasImmunity     = true;
         shieldObject.SetActive(true);
@@ -56,8 +65,10 @@ public class KartEffects : MonoBehaviour {
         HoldsBall = true;
     }
     
-    private bool IsOnIce() {
-        return !NavMesh.SamplePosition(transform.position, 
-            out _, 1f, NavMesh.GetAreaFromName("Ice"));
+    private bool CheckTerrainFor(string areaName) {
+        if (!NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 2f, NavMesh.AllAreas)) return false;
+        int area = NavMesh.GetAreaFromName(areaName);
+        return (hit.mask & (1 << area)) != 0;
+
     }
 }

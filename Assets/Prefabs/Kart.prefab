@@ -387,7 +387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KartEffects
   crownSpeedMultiplier: 1.5
-  iceGripMultiplier: 0.1
+  iceGripMultiplier: 0.01
   immunityTime: 1.5
   shieldObject: {fileID: 1649861567196933671}
 --- !u!1001 &504435474054631932
