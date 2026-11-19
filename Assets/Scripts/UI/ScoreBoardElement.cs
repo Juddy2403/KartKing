@@ -39,6 +39,12 @@ namespace UI {
                 ((ScoreEntryElement)a).Score
             ));
 
+            for (int i = 0; i < childCount; i++) {
+                var entry = (ScoreEntryElement)ElementAt(i);
+                if (i == 0) entry.AddWinnerClass(); 
+                else entry.RemoveWinnerClass();
+            }
+            
             if (!hideLast) return;
             
             for (int i = 0; i < childCount; i++) {
@@ -46,6 +52,7 @@ namespace UI {
                     ? DisplayStyle.Flex
                     : DisplayStyle.None;
             }
+            
         }
     }
 }

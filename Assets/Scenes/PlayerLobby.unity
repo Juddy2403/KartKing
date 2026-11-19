@@ -464,6 +464,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 4565931890994085751, guid: c994f925cb086784a983a2cebcf1598c, type: 3}
+      propertyPath: RoundTime
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8117588402498198337, guid: c994f925cb086784a983a2cebcf1598c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.31142

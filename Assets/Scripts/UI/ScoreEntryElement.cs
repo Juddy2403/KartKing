@@ -21,5 +21,13 @@ namespace UI {
             Score = score;
             scoreLabel.text = score.ToString();
         }
+
+        public void AddWinnerClass() {
+            AddToClassList("winner");
+        }
+        
+        public void RemoveWinnerClass() {
+            RemoveFromClassList("winner");
+        }
     }
 }
