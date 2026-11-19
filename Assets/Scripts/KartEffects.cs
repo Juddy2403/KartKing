@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(Kart))]
 public class KartEffects : MonoBehaviour {
     [SerializeField] private float      crownSpeedMultiplier = 1.5f;
+    [SerializeField] private float      iceGripMultiplier = 0.4f;
     [Tooltip("Immunity duration right after picking up the crown")]
     [SerializeField] private float      immunityTime = 1.5f;
     [SerializeField] private GameObject shieldObject;
@@ -22,6 +24,7 @@ public class KartEffects : MonoBehaviour {
     }
 
     private void Update() {
+        GripMultiplier = IsOnIce() ? iceGripMultiplier : 1f;
         HandleImmunity();
     }
 
@@ -51,5 +54,10 @@ public class KartEffects : MonoBehaviour {
 
     private void OnBallPickedUp() {
         HoldsBall = true;
+    }
+    
+    private bool IsOnIce() {
+        return !NavMesh.SamplePosition(transform.position, 
+            out _, 1f, NavMesh.GetAreaFromName("Ice"));
     }
 }
