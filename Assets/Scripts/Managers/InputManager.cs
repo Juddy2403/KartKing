@@ -30,11 +30,11 @@ namespace Managers {
 
         private void OnSceneChange(SceneManager.SceneType type) {
             var map = inputActions.FindActionMap("Lobby", true);
+            UnsubscribeFromEvents(map);
+            
             switch (type) {
                 case SceneManager.SceneType.arena:
                     map.Disable();
-                    map.FindAction("Confirm").started -= HandleConfirm;
-                    map.FindAction("Cancel").started  -= HandleCancel;
                     break;
                 case SceneManager.SceneType.lobby:
                     map.Enable();
@@ -42,12 +42,32 @@ namespace Managers {
                     map.FindAction("Cancel").started  += HandleCancel;
                     break;
                 case SceneManager.SceneType.menu:
+                    map.Disable();
                     break;
                 case SceneManager.SceneType.leaderboard:
+                    map.Enable();
+                    map.FindAction("Confirm").started += Replay;
+                    map.FindAction("Cancel").started  += GoToMenu;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+        }
+
+        private void UnsubscribeFromEvents(InputActionMap map) {
+            map.FindAction("Confirm").started -= HandleConfirm;
+            map.FindAction("Cancel").started  -= HandleCancel;
+                    
+            map.FindAction("Confirm").started -= Replay;
+            map.FindAction("Cancel").started  -= GoToMenu;
+        }
+
+        private void GoToMenu(InputAction.CallbackContext obj) {
+            SceneManager.Instance.LoadScene(SceneManager.SceneType.menu);
+        }
+
+        private void Replay(InputAction.CallbackContext obj) {
+            SceneManager.Instance.LoadScene(SceneManager.SceneType.arena);
         }
 
         private void HandleConfirm(InputAction.CallbackContext obj) {

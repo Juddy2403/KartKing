@@ -41,7 +41,6 @@ namespace Managers {
 
         private void OnDestroy() {
             InputSystem.onDeviceChange -= OnDeviceChange;
-            SceneManager.Instance?.OnSceneChange?.RemoveListener(OnSceneChange);
         }
 
         private void OnSceneChange(SceneManager.SceneType type) {

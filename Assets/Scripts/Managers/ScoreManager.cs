@@ -26,8 +26,15 @@ namespace Managers {
             foreach (var player in PlayerManager.Instance.Players) {
                 Scores.Add(new ScoreData { player = player, score = 0 });
             }
-
+            SceneManager.Instance.OnSceneChange.AddListener(OnSceneChange);
             crown.onPickUp.AddListener(OnCrownPickup);
+        }
+        
+        private void OnSceneChange(SceneManager.SceneType type) {
+            if (type is SceneManager.SceneType.menu or SceneManager.SceneType.arena) {
+                Instance = null;
+                Destroy(gameObject);
+            }
         }
 
         private void OnCrownPickup(Kart kart) {

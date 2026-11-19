@@ -4,4 +4,6 @@
     <ui:VisualElement style="flex-grow: 1; background-color: rgb(42, 46, 119);">
         <UI.ScoreBoard style="top: 192px; left: 242px; position: absolute; width: auto; height: auto; right: 0; bottom: 0; align-items: flex-start; justify-content: flex-start; align-self: center; align-content: center; flex-wrap: nowrap; flex-direction: column; aspect-ratio: 1;"/>
     </ui:VisualElement>
+    <ui:Label text="Press A to replay" class="text" style="position: absolute; right: 38px; bottom: 104px;"/>
+    <ui:Label text="Press B to go back to menu" class="text" style="position: absolute; right: 38px; bottom: 53px;"/>
 </ui:UXML>
