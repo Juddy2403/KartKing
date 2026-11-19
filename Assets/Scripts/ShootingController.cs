@@ -2,7 +2,7 @@ using Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(IKartInput), typeof(KartEffects))]
+[RequireComponent(typeof(KartEffects))]
 public class ShootingController : MonoBehaviour {
     [SerializeField] private LineRenderer aimIndicator;
 

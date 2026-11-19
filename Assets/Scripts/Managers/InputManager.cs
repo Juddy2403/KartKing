@@ -38,8 +38,10 @@ namespace Managers {
                     break;
                 case SceneManager.SceneType.lobby:
                     map.Enable();
-                    map.FindAction("Confirm").started += HandleConfirm;
-                    map.FindAction("Cancel").started  += HandleCancel;
+                    map.FindAction("Confirm").started   += HandleConfirm;
+                    map.FindAction("Cancel").started    += HandleCancel;
+                    map.FindAction("AddBot").started    += AddBot;
+                    map.FindAction("RemoveBot").started += RemoveBot;
                     break;
                 case SceneManager.SceneType.menu:
                     map.Disable();
@@ -54,12 +56,23 @@ namespace Managers {
             }
         }
 
+        private void AddBot(InputAction.CallbackContext obj) {
+            PlayerManager.Instance.AddBot();
+        }
+
+        private void RemoveBot(InputAction.CallbackContext obj) {
+            PlayerManager.Instance.RemoveLastBot();
+        }
+
         private void UnsubscribeFromEvents(InputActionMap map) {
             map.FindAction("Confirm").started -= HandleConfirm;
             map.FindAction("Cancel").started  -= HandleCancel;
                     
             map.FindAction("Confirm").started -= Replay;
             map.FindAction("Cancel").started  -= GoToMenu;
+            
+            map.FindAction("AddBot").started    -= AddBot;
+            map.FindAction("RemoveBot").started -= RemoveBot;
         }
 
         private void GoToMenu(InputAction.CallbackContext obj) {

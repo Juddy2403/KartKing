@@ -17,7 +17,7 @@ public class Kart : MonoBehaviour {
     public  UnityEvent  onBallShot;
     public  PlayerSlot  Slot { get; private set; }
     private KartEffects kartEffects;
-    private Ball        heldBall = null;
+    public  Ball        HeldBall { get; private set; } = null;
     private Crown       crown;
 
     [SerializeField] private Renderer targetRenderer;
@@ -33,13 +33,8 @@ public class Kart : MonoBehaviour {
 
         SetColor(Slot.Color);
 
-        if (slot.IsBot) {
-            // gameObject.AddComponent<BotKartInput>();   // your bot implements IKartInput
-            Destroy(GetComponent<HumanKartInput>());
-        }
-        else {
-            GetComponent<HumanKartInput>().Bind(slot);
-        }
+        if (slot.IsBot) gameObject.AddComponent<BotKartInput>();
+        else gameObject.AddComponent<HumanKartInput>().Bind(slot);
     }
 
     private void OnDestroy() {
@@ -54,30 +49,30 @@ public class Kart : MonoBehaviour {
         if (!crown) Debug.LogError("No crown found in scene");
 
         kartEffects = GetComponent<KartEffects>();
-        
+
         GetComponent<ShootingController>().shootRequest.AddListener(OnShootRequest);
     }
 
     private void OnShootRequest(Vector3 direction, float force) {
-        if (!heldBall) return;
+        if (!HeldBall) return;
         ShootBall(direction, force);
     }
 
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("Ball")) {
             // Can only pick up one ball at a time
-            if (heldBall) return;
-            
+            if (HeldBall) return;
+
             var ball = other.gameObject.GetComponent<Ball>();
             if (crown.Holder == this) {
                 // If no one shot the ball, keep the crown
                 if (!ball.Shooter) return;
-                if(kartEffects.HasImmunity) return;
+                if (kartEffects.HasImmunity) return;
 
                 // Handing the crown to the attacker
                 crown.PickUp(ball.Shooter);
                 onLostCrown?.Invoke();
-                
+
                 PickUpBall(ball);
             }
             else {
@@ -85,7 +80,7 @@ public class Kart : MonoBehaviour {
             }
         }
         else if (other.gameObject.CompareTag("Crown")) {
-            if (heldBall) {
+            if (HeldBall) {
                 DropBall();
             }
 
@@ -95,20 +90,20 @@ public class Kart : MonoBehaviour {
     }
 
     private void DropBall() {
-        heldBall.Drop();
-        heldBall = null;
+        HeldBall.Drop();
+        HeldBall = null;
         onBallShot?.Invoke();
     }
 
     private void ShootBall(Vector3 direction, float force) {
-        heldBall.Shoot(direction, force);
-        heldBall = null;
+        HeldBall.Shoot(direction, force);
+        HeldBall = null;
         onBallShot?.Invoke();
     }
-    
+
     private void PickUpBall(Ball ball) {
         ball.PickUp(gameObject);
-        heldBall = ball;
+        HeldBall = ball;
         onBallPickedUp?.Invoke();
     }
 }

@@ -8,6 +8,7 @@ public class Ball : MonoBehaviour {
     private Rigidbody rigidbody;
     private Kart      holder = null;
     public  Kart      Shooter { get; private set; } = null;
+    public bool IsFree => holder == null;
     private Transform socket = null;
 
     private void Awake() {

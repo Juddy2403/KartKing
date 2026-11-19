@@ -1,7 +1,7 @@
 using Interfaces;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody), typeof(IKartInput), typeof(KartEffects))]
+[RequireComponent(typeof(Rigidbody), typeof(KartEffects))]
 public class MovementController : MonoBehaviour {
     [Header("Movement")] [SerializeField] private float acceleration      = 15f;
     [SerializeField]                      private float brakeDeceleration = 25f;

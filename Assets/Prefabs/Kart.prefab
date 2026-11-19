@@ -217,7 +217,6 @@ GameObject:
   - component: {fileID: 7773003694634218282}
   - component: {fileID: 2585337795271365400}
   - component: {fileID: 1670868977749714064}
-  - component: {fileID: 1234971005805377559}
   - component: {fileID: 6347799527925800710}
   - component: {fileID: 709050450889051743}
   m_Layer: 3
@@ -344,18 +343,6 @@ MonoBehaviour:
       m_Calls: []
   targetRenderer: {fileID: 124319476429466593}
   materialIndex: 2
---- !u!114 &1234971005805377559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7747163609600243233}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d350c256e1c8c641a421db4685e8d29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HumanKartInput
 --- !u!114 &6347799527925800710
 MonoBehaviour:
   m_ObjectHideFlags: 0

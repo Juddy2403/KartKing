@@ -44,8 +44,10 @@ public class HumanKartInput : MonoBehaviour, IKartInput {
     }
 
     private void OnDestroy() {
-        shoot.started   -= OnShootStarted;
-        shoot.canceled  -= OnShootPerformed;
+        if (map == null) return;
         map?.Disable();
+        if (shoot == null) return;
+        shoot.started  -= OnShootStarted;
+        shoot.canceled -= OnShootPerformed;
     } 
 }

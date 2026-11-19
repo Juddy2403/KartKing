@@ -21,8 +21,7 @@ public class PlayerSlot
         Color = color;
         IsBot = device == null;
 
-        if (IsBot)
-        {
+        if (IsBot) {
             IsConnected = true; // bots are never "lost"
             return;
         }

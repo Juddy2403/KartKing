@@ -74,14 +74,13 @@ namespace Managers {
             PlayerLeft?.Invoke(slot);
         }
 
-        public PlayerSlot AddBot(InputActionAsset inputActions) {
+        public void AddBot() {
             int index = FirstFreeIndex();
-            if (index < 0) return null;
+            if (index < 0) return;
 
-            var slot = new PlayerSlot(index, ColorFor(index), inputActions, null);
+            var slot = new PlayerSlot(index, ColorFor(index), null, null);
             slots[index] = slot;
             PlayerJoined?.Invoke(slot);
-            return slot;
         }
 
         public void RemoveLastBot() {
