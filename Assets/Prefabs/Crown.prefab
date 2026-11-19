@@ -54,7 +54,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
+  m_Radius: 1.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3037872978547634732
 MonoBehaviour:
@@ -69,6 +69,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Crown
   enableColliderAfter: 0.5
+  onPickUp:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &2051290740407425620
 PrefabInstance:
   m_ObjectHideFlags: 0

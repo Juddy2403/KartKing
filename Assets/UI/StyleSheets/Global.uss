@@ -3,6 +3,6 @@
 
 .text {
     color: rgb(255, 255, 255);
-    font-size: 21px;
+    font-size: 37px;
     -unity-font-style: italic;
 }
