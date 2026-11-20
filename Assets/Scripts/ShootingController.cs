@@ -19,6 +19,7 @@ public class ShootingController : MonoBehaviour {
     /// ShootRequest(direction, force)
     /// </summary>
     public UnityEvent<Vector3, float> shootRequest;
+    public UnityEvent shootStarted;
 
     private IKartInput  input;
     private KartEffects effects;
@@ -30,6 +31,7 @@ public class ShootingController : MonoBehaviour {
 
     private void OnDestroy() {
         shootRequest.RemoveAllListeners();
+        shootStarted.RemoveAllListeners();
     }
 
     private void Update() {
@@ -52,6 +54,7 @@ public class ShootingController : MonoBehaviour {
         aimIndicator.enabled = true;
 
         if (input.ShootStarted) {
+            shootStarted?.Invoke();
             isCharging      = true;
             chargeStartTime = Time.time;
         }

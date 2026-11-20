@@ -15,6 +15,7 @@ public class Kart : MonoBehaviour {
 
     public  UnityEvent  onBallPickedUp;
     public  UnityEvent  onBallShot;
+    public  UnityEvent  onShootStarted;
     public  PlayerSlot  Slot { get; private set; }
     private KartEffects kartEffects;
     public  Ball        HeldBall { get; private set; } = null;
@@ -40,6 +41,7 @@ public class Kart : MonoBehaviour {
     private void OnDestroy() {
         onBallShot.RemoveAllListeners();
         onBallPickedUp.RemoveAllListeners();
+        onShootStarted.RemoveAllListeners();
         onCapturedCrown.RemoveAllListeners();
         onLostCrown.RemoveAllListeners();
     }
@@ -50,8 +52,15 @@ public class Kart : MonoBehaviour {
 
         kartEffects = GetComponent<KartEffects>();
 
-        GetComponent<ShootingController>().shootRequest.AddListener(OnShootRequest);
+        var shootingController = GetComponent<ShootingController>();
+        shootingController.shootRequest.AddListener(OnShootRequest);
+        shootingController.shootStarted.AddListener(OnShootStarted);
     }
+
+    private void OnShootStarted() {
+        onShootStarted?.Invoke();
+    }
+
 
     private void OnShootRequest(Vector3 direction, float force) {
         if (!HeldBall) return;
