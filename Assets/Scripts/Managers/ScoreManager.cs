@@ -25,6 +25,7 @@ namespace Managers {
         private int                   crownHolderIndex = -1;
         private int                   lastReportedScore;
         private float                 pickUpTime = 0f;
+        private int                   scoreAtPickup = 0;
 
         private void Awake() {
             if (Instance != null && Instance != this) {
@@ -63,6 +64,7 @@ namespace Managers {
             }
 
             lastReportedScore = 0;
+            scoreAtPickup     = Scores[crownHolderIndex].score;
             pickUpTime        = Time.time;
         }
 
@@ -77,7 +79,7 @@ namespace Managers {
 
             if (newScore < lastReportedScore + scoreRounding) return;
 
-            scoreData.score          = newScore;
+            scoreData.score          = newScore + scoreAtPickup;
             Scores[crownHolderIndex] = scoreData;
             lastReportedScore        = newScore;
             onScoreUpdate.Invoke(scoreData);

@@ -50,12 +50,13 @@ MonoBehaviour:
   spawnVFX: {fileID: 7177991128484655659, guid: 47bf7d9e34e423648826c68d24ed375e, type: 3}
   destroyVFX: {fileID: 2433282508537954060, guid: 3ef3ae421f71c5c4e97fe12dc2fc6312, type: 3}
   spawnOffset: {x: 0, y: 0.5, z: 0}
+  startBallFraction: 0.67
   spawnBallsAfter: 4
   ballsAtMinPlayers: 1
-  ballsAtMaxPlayers: 7
-  maxCrownHoldTime: 30
+  ballsAtMaxPlayers: 9
+  maxCrownHoldTime: 15
   lateBallsAtMinPlayers: 2
-  lateBallsAtMaxPlayers: 9
+  lateBallsAtMaxPlayers: 11
 --- !u!65 &5930973460458587415
 BoxCollider:
   m_ObjectHideFlags: 0

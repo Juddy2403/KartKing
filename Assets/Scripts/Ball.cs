@@ -4,6 +4,7 @@ using UnityEngine;
 public class Ball : MonoBehaviour {
     [SerializeField] private float enableColliderAfter = 0.5f;
     [SerializeField] private float timeTillShooterLost = 6f;
+    
 
     private float     curentShooterLostTime;
     

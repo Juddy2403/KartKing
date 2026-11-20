@@ -9,7 +9,9 @@ namespace Spawners {
         [SerializeField] private GameObject  spawnVFX;
         [SerializeField] private GameObject  destroyVFX;
         [SerializeField] private Vector3     spawnOffset;
-
+        [Tooltip("Share of the player-based ball count that is present before anyone has held the crown")]
+        [SerializeField, Range(0f, 1f)] private float startBallFraction = 0.5f;
+        
         [SerializeField] private float spawnBallsAfter = 4f;
 
         [SerializeField] private int   ballsAtMinPlayers = 1;
@@ -70,10 +72,10 @@ namespace Spawners {
 
             // Scale from minimum to maximum based on crown hold time.
             float crownT = Mathf.Clamp01(ScoreManager.Instance.TimeSincePickup / maxCrownHoldTime);
-
             int playerBasedCount = Mathf.RoundToInt(Mathf.Lerp(atMin, atMax, playerT));
+            int startCount       = Mathf.Max(1, Mathf.RoundToInt(playerBasedCount * startBallFraction));
 
-            return Mathf.Max(1, Mathf.RoundToInt(Mathf.Lerp(1, playerBasedCount, crownT)));
+            return Mathf.Max(1, Mathf.RoundToInt(Mathf.Lerp(startCount, playerBasedCount, crownT)));
         }
 
         private bool SpawnBall() {

@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
+#if UNITY_EDITOR
 namespace Editor {
     [InitializeOnLoad]
     public static class StartScene
@@ -14,3 +15,4 @@ namespace Editor {
         }
     }
 }
+#endif
