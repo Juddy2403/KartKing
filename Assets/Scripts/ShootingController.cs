@@ -12,8 +12,10 @@ public class ShootingController : MonoBehaviour {
     [SerializeField] private float maSshootingForce   = 40;
     [SerializeField] private float chargeTime         = 3f;
 
-    private float chargeStartTime;
-    private bool  isCharging;
+    private float   chargeStartTime;
+    private bool    isCharging;
+    private Vector3 lastAimDirection;
+    private float   lastShootingForce;
     
     /// <summary>
     /// ShootRequest(direction, force)
@@ -47,28 +49,31 @@ public class ShootingController : MonoBehaviour {
 
         if (aimDirection.magnitude < 0.1f) {
             aimIndicator.enabled = false;
-            return;
+            if (!isCharging) return;
         }
+        else {
+            aimDirection.Normalize();
+            lastAimDirection = aimDirection;
+            aimIndicator.enabled = true;
 
-        aimDirection.Normalize();
-        aimIndicator.enabled = true;
+            if (input.ShootStarted) {
+                shootStarted?.Invoke();
+                isCharging      = true;
+                chargeStartTime = Time.time;
+            }
 
-        if (input.ShootStarted) {
-            shootStarted?.Invoke();
-            isCharging      = true;
-            chargeStartTime = Time.time;
+            var charge = isCharging ? Mathf.Clamp01((Time.time - chargeStartTime) / chargeTime) : 0f;
+
+            float indicatorLength = Mathf.Lerp(minIndicatorLength, maxIndicatorLength, charge);
+            float shootingForce   = Mathf.Lerp(minShootingForce, maSshootingForce, charge);
+            lastShootingForce = shootingForce;
+            
+            aimIndicator.SetPosition(0, aimIndicator.transform.position);
+            aimIndicator.SetPosition(1, aimIndicator.transform.position + aimDirection * indicatorLength);
         }
-
-        var charge = isCharging ? Mathf.Clamp01((Time.time - chargeStartTime) / chargeTime) : 0f;
-
-        float indicatorLength = Mathf.Lerp(minIndicatorLength, maxIndicatorLength, charge);
-        float shootingForce = Mathf.Lerp(minShootingForce, maSshootingForce, charge);
-
-        aimIndicator.SetPosition(0, aimIndicator.transform.position);
-        aimIndicator.SetPosition(1, aimIndicator.transform.position + aimDirection * indicatorLength);
 
         if (input.ShootPerformed && isCharging) {
-            shootRequest?.Invoke(aimDirection, shootingForce);
+            shootRequest?.Invoke(lastAimDirection, lastShootingForce);
             isCharging = false;
         }
     }

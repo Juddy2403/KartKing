@@ -3,12 +3,15 @@ using UnityEngine;
 [RequireComponent(typeof(Collider), typeof(Rigidbody))]
 public class Ball : MonoBehaviour {
     [SerializeField] private float enableColliderAfter = 0.5f;
+    [SerializeField] private float timeTillShooterLost = 6f;
 
+    private float     curentShooterLostTime;
+    
     private Collider  triggerCollider;
     private Rigidbody rigidbody;
     private Kart      holder = null;
     public  Kart      Shooter { get; private set; } = null;
-    public bool IsFree => holder == null;
+    public  bool      IsFree  => holder == null;
     private Transform socket = null;
 
     private void Awake() {
@@ -24,6 +27,10 @@ public class Ball : MonoBehaviour {
         if (holder) {
             transform.position = socket.transform.position;
         }
+
+        if (!Shooter) return;
+        curentShooterLostTime -= Time.deltaTime;
+        if (curentShooterLostTime <= 0f) Shooter = null;
     }
 
     public void PickUp(GameObject kart) {
@@ -46,6 +53,7 @@ public class Ball : MonoBehaviour {
     public void Shoot(Vector3 direction, float force) {
         rigidbody.AddForce(direction * force, ForceMode.Impulse);
         Shooter = holder;
+        curentShooterLostTime = timeTillShooterLost;
         holder  = null;
         
         // In order to avoid immediately picking up the ball you shot
