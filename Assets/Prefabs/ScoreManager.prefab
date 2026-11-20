@@ -45,7 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Managers.ScoreManager
   scorePerSecond: 5
-  scoreMultiplier: 5
+  scoreIncreasePerSecond: 0.1
+  lateGameScoreMultiplier: 2
+  scoreRounding: 5
   onScoreUpdate:
     m_PersistentCalls:
       m_Calls: []

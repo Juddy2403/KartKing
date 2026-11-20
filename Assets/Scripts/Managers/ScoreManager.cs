@@ -75,7 +75,7 @@ namespace Managers {
             var  scoreMultiplier = lateGame ? lateGameScoreMultiplier : 1f;
             int  newScore        = Mathf.FloorToInt((scorePerSecond + scoreIncreasePerSecond * TimeSincePickup ) * scoreMultiplier * TimeSincePickup);
 
-            if (newScore < lastReportedScore + scoreMultiplier) return;
+            if (newScore < lastReportedScore + scoreRounding) return;
 
             scoreData.score          = newScore;
             Scores[crownHolderIndex] = scoreData;
