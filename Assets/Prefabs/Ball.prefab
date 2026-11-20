@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Ball
   enableColliderAfter: 0.1
-  timeTillShooterLost: 5
+  timeTillShooterLost: 3
 --- !u!1 &8154549263066238830
 GameObject:
   m_ObjectHideFlags: 0

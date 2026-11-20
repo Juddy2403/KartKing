@@ -79,9 +79,9 @@ public class Kart : MonoBehaviour {
                 if (kartEffects.HasImmunity) return;
 
                 // Handing the crown to the attacker
-                crown.PickUp(ball.Shooter);
+                ball.Shooter.CaptureCrown();
+                
                 onLostCrown?.Invoke();
-
                 PickUpBall(ball);
             }
             else {
@@ -89,15 +89,15 @@ public class Kart : MonoBehaviour {
             }
         }
         else if (other.gameObject.CompareTag("Crown")) {
-            if (HeldBall) {
-                DropBall();
-            }
-
-            crown.PickUp(this);
-            onCapturedCrown?.Invoke();
+            CaptureCrown();
         }
     }
 
+    public void CaptureCrown() {
+        if (HeldBall) DropBall();
+        crown.PickUp(this);
+        onCapturedCrown?.Invoke();
+    }
     private void DropBall() {
         HeldBall.Drop();
         HeldBall = null;
