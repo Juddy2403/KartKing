@@ -1,7 +1,10 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/StyleSheets/Global.uss?fileID=7433441132597879392&amp;guid=30cc4b917a8d4e24fa2cc0338dc81bef&amp;type=3#Global"/>
-    <ui:VisualElement style="flex-grow: 1; background-color: rgb(46, 56, 136);"/>
-    <ui:VisualElement style="flex-grow: 1; position: absolute; left: 273px; top: 237px; align-self: flex-start; align-items: flex-start; width: 510px; height: 509px;">
+    <ui:VisualElement style="flex-grow: 1; background-color: rgb(46, 56, 136);">
+        <ui:Label text="KartKing" class="text" style="position: absolute; right: 350px; top: 145px; font-size: 108px; -unity-font-style: bold-and-italic; color: rgb(255, 158, 38);"/>
+    </ui:VisualElement>
+    <ui:Image source="project://database/Assets/GraphicAssets/Texture/MenuPic.png?fileID=2800000&amp;guid=48d6748c68b66dd4ca349dc189a40e77&amp;type=3#MenuPic" style="position: absolute; bottom: 6px; right: 76px; height: 584px; width: 646px; rotate: 20deg;"/>
+    <ui:VisualElement style="flex-grow: 1; position: absolute; left: 391px; top: 443px; align-self: flex-start; align-items: flex-start; width: 510px; height: 509px;">
         <ui:Button text="Start" selectable="true" name="Start" class="text button"/>
         <ui:Button text="Tutorial&#10;" selectable="true" name="Tutorial" class="text button"/>
         <ui:Button text="Quit&#10;" selectable="true" name="Quit" class="text button"/>
