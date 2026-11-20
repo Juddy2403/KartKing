@@ -9,9 +9,9 @@ public class Ball : MonoBehaviour {
     
     private Collider  triggerCollider;
     private Rigidbody rigidbody;
-    private Kart      holder = null;
+    public  Kart      Holder  { get; private set; } = null;
     public  Kart      Shooter { get; private set; } = null;
-    public  bool      IsFree  => holder == null;
+    public  bool      IsFree  => Holder == null;
     private Transform socket = null;
 
     private void Awake() {
@@ -24,7 +24,7 @@ public class Ball : MonoBehaviour {
     }
 
     private void Update() {
-        if (holder) {
+        if (Holder) {
             transform.position = socket.transform.position;
         }
 
@@ -34,15 +34,15 @@ public class Ball : MonoBehaviour {
     }
 
     public void PickUp(GameObject kart) {
-        holder  = kart.GetComponent<Kart>();
+        Holder  = kart.GetComponent<Kart>();
         Shooter = null;
-        socket  = holder.GetBallSocket();
+        socket  = Holder.GetBallSocket();
 
         triggerCollider.enabled = false;
     }
 
     public void Drop() {
-        holder = null;
+        Holder = null;
         Shooter = null;
         socket  = null;
         
@@ -52,9 +52,9 @@ public class Ball : MonoBehaviour {
     
     public void Shoot(Vector3 direction, float force) {
         rigidbody.AddForce(direction * force, ForceMode.Impulse);
-        Shooter = holder;
+        Shooter = Holder;
         curentShooterLostTime = timeTillShooterLost;
-        holder  = null;
+        Holder  = null;
         
         // In order to avoid immediately picking up the ball you shot
         Invoke(nameof(EnableCollider), enableColliderAfter);

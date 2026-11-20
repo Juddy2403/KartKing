@@ -47,11 +47,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Spawners.BallSpawner
   spawnBounds: {fileID: 5930973460458587415}
   ballPrefab: {fileID: 7037266718389524947, guid: 237d41d0cabcd6e46b28352286b81237, type: 3}
-  spawnVFX: {fileID: 7177991128484655659, guid: 59a35ab9f68edff40b6e5332bed330f5, type: 3}
+  spawnVFX: {fileID: 7177991128484655659, guid: 47bf7d9e34e423648826c68d24ed375e, type: 3}
+  destroyVFX: {fileID: 2433282508537954060, guid: 3ef3ae421f71c5c4e97fe12dc2fc6312, type: 3}
   spawnOffset: {x: 0, y: 0.5, z: 0}
+  spawnBallsAfter: 4
   ballsAtMinPlayers: 1
   ballsAtMaxPlayers: 7
-  lateGameSeconds: 15
+  maxCrownHoldTime: 30
   lateBallsAtMinPlayers: 2
   lateBallsAtMaxPlayers: 9
 --- !u!65 &5930973460458587415

@@ -98,7 +98,7 @@ public class Kart : MonoBehaviour {
         crown.PickUp(this);
         onCapturedCrown?.Invoke();
     }
-    private void DropBall() {
+    public void DropBall() {
         HeldBall.Drop();
         HeldBall = null;
         onBallShot?.Invoke();
