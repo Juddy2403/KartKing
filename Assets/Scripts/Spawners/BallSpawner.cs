@@ -20,7 +20,6 @@ namespace Spawners {
         [SerializeField] private int   lateBallsAtMaxPlayers = 9;
 
         private readonly List<GameObject> balls         = new();
-        private          float            timeRemaining = float.PositiveInfinity;
 
         private void Start() {
             GameManager.Instance.onTimeTick.AddListener(OnTimeTick);
@@ -28,7 +27,6 @@ namespace Spawners {
         }
 
         private void OnTimeTick(float seconds) {
-            timeRemaining = seconds;
             SpawnBalls();
         }
 

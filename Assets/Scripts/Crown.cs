@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using DG.Tweening;
 
 [RequireComponent(typeof(Collider))]
 public class Crown : MonoBehaviour {
@@ -15,9 +16,11 @@ public class Crown : MonoBehaviour {
     }
 
     private void Update() {
-        if (Holder) {
-            transform.position = socket.transform.position;
-        }
+        if (!Holder) return;
+        transform.DOKill();
+
+        transform.DOMove(socket.transform.position, 0.2f)
+            .SetEase(Ease.OutQuad);
     }
 
     private void OnDestroy() {
