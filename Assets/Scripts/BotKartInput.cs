@@ -2,16 +2,15 @@ using Interfaces;
 using UnityEngine;
 using UnityEngine.AI;
 
-// Fully vibe coded for the sake of testing 
-
 /// <summary>
 /// Simple fallible bot driver. It produces the same IKartInput values a human would:
+///  - crown unclaimed:     everyone races for it
 ///  - has the crown:        flee from the nearest threat (karts holding a ball count double)
 ///  - has a ball:           chase the crown holder, aim, charge and shoot
 ///  - has neither:          go for a free ball
 /// It is deliberately imperfect: delayed reactions, wobbly aim, slow aim turning,
 /// random distractions and the occasional non-optimal ball choice. 'skill' scales all of it.
-/// Assumes: Kart.HasCrown (bool), Kart.HeldBall (Ball or null), Ball.IsFree (bool).
+/// Assumes: KartEffects.HasCrown, Kart.HeldBall (Ball or null), Ball.IsFree, Crown.Holder (Kart or null).
 /// </summary>
 [DefaultExecutionOrder(-100)] // update before ShootingController so one-frame pulses are seen
 [RequireComponent(typeof(Kart))]
@@ -29,6 +28,13 @@ public class BotKartInput : MonoBehaviour, IKartInput {
     [Header("Movement")] [SerializeField] private float fleeDistance  = 12f;
     [SerializeField]                      private float wanderRadius  = 12f;
     [SerializeField]                      private float waypointReach = 1.5f;
+
+    [Header("Getting unstuck")] [SerializeField] private float stuckTime            = 1.5f; // seconds without progress before giving up
+    [SerializeField]                             private float stuckSpeed           = 0.5f; // m/s that counts as not moving
+    [SerializeField]                             private float detourTime           = 1.5f; // seconds spent heading elsewhere
+    [SerializeField]                             private float unreachableTolerance = 3f;   // path ended this far from the target = unreachable
+
+    [Header("Debug")] [SerializeField] private bool logDecisions;
 
     [Header("Aim and shooting")] [SerializeField]
     private float shootRange = 14f;
@@ -71,6 +77,13 @@ public class BotKartInput : MonoBehaviour, IKartInput {
     private float   distractedUntil;
     private Vector3 distractionTarget;
 
+    private Crown   crown;
+    private Ball    currentBall;
+    private Ball    ignoredBall;
+    private float   ignoreBallUntil;
+    private Vector3 lastPosition;
+    private float   stuckTimer;
+
     private bool  aimVisible; // aim is only reported while a shot is being charged
     private bool  hadBall;
     private bool  charging;
@@ -85,12 +98,14 @@ public class BotKartInput : MonoBehaviour, IKartInput {
         maxStick      = Mathf.Lerp(0.65f, 1f, skill) * Random.Range(0.92f, 1f); // dumb bots don't floor it
         aimDir        = Flat(transform.forward).normalized;
         nextThinkTime = Time.time + Random.value * 0.5f; // desync the bots
+        lastPosition  = transform.position;
     }
 
     private void Update() {
         if (Time.time >= nextThinkTime) Think();
 
         UpdateSteering();
+        CheckStuck();
         UpdateAim();
         UpdateShooting();
     }
@@ -112,13 +127,26 @@ public class BotKartInput : MonoBehaviour, IKartInput {
 
         hasMoveTarget = false;
         aimTarget     = null;
+        currentBall   = null;
         stopDistance  = 0f;
 
-        if (kartEffects.HasCrown) Flee();
-        else if (kart.HeldBall) Hunt();
-        else FetchBall();
+        if (crown == null) crown = FindFirstObjectByType<Crown>();
+        Kart holder = crown != null ? crown.Holder : null;
+
+        if (kartEffects.HasCrown)                 Flee();
+        else if (crown != null && holder == null) GoForCrown();   // nobody has it yet: go and grab it
+        else if (kart.HeldBall)                   Hunt(holder);
+        else                                      FetchBall(holder);
 
         ApplyDistraction();
+
+        if (logDecisions) {
+            int free = 0;
+            foreach (Ball b in balls) if (b.IsFree) free++;
+            Debug.Log($"{name}: crown={(holder != null ? holder.name : "FREE")} ball={(kart.HeldBall ? "yes" : "no")} " +
+                      $"freeBalls={free} target={(hasMoveTarget ? moveTarget.ToString("F1") : "none")} " +
+                      $"detour={Time.time < distractedUntil}");
+        }
 
         if (hasMoveTarget) RecalculatePath();
     }
@@ -141,9 +169,8 @@ public class BotKartInput : MonoBehaviour, IKartInput {
         hasMoveTarget = true;
     }
 
-    private void Hunt() {
-        Kart holder = CrownHolder();
-        if (holder == null) {
+    private void Hunt(Kart holder) {
+        if (holder == null || holder == kart) {
             Wander();
             return;
         }
@@ -157,13 +184,20 @@ public class BotKartInput : MonoBehaviour, IKartInput {
         aimError = Random.Range(-1f, 1f) * Mathf.Lerp(maxAimError, minAimError, skill);
     }
 
-    private void FetchBall() {
+    // Nobody holds the crown yet: everyone races for the pickup
+    private void GoForCrown() {
+        moveTarget    = crown.transform.position;
+        hasMoveTarget = true;
+    }
+
+    private void FetchBall(Kart holder) {
         Ball  nearest   = null, random = null;
         float best      = float.MaxValue;
         int   freeCount = 0;
 
         foreach (Ball ball in balls) {
             if (!ball.IsFree) continue;
+            if (ball == ignoredBall && Time.time < ignoreBallUntil) continue; // couldn't reach it recently
 
             float d = Flat(ball.transform.position - transform.position).sqrMagnitude;
             if (d < best) {
@@ -176,12 +210,20 @@ public class BotKartInput : MonoBehaviour, IKartInput {
         }
 
         if (nearest == null) {
-            Wander();
+            // No ball to grab: hang around the crown holder, ready for a stray ball
+            if (holder != null && holder != kart) {
+                moveTarget    = holder.transform.position;
+                hasMoveTarget = true;
+                stopDistance  = shootRange;
+            }
+            else Wander();
+
             return;
         }
 
         // Clumsy bots sometimes head for a random ball instead of the closest one
         Ball chosen = Random.value < (1f - skill) * 0.4f ? random : nearest;
+        currentBall   = chosen;
         moveTarget    = chosen.transform.position;
         hasMoveTarget = true;
     }
@@ -215,12 +257,57 @@ public class BotKartInput : MonoBehaviour, IKartInput {
         Vector3 dir = Vector3.zero;
 
         if (hasMoveTarget) {
-            Vector3 pos = transform.position;
-            if (Flat(moveTarget - pos).magnitude > stopDistance)
-                dir = Flat(NextWaypoint(pos) - pos).normalized;
+            Vector3 pos          = transform.position;
+            float   distToTarget = Flat(moveTarget - pos).magnitude;
+
+            if (distToTarget > stopDistance) {
+                Vector3 toWaypoint = Flat(NextWaypoint(pos) - pos);
+
+                if (toWaypoint.magnitude > 0.5f)
+                    dir = toWaypoint.normalized;
+                else if (distToTarget > stopDistance + unreachableTolerance)
+                    GiveUpOnTarget(); // end of the path reached but the target is still far away
+            }
         }
 
         Steering = new Vector2(dir.x, dir.z) * maxStick;
+    }
+
+    // ---------- Getting unstuck ----------
+
+    // Steering but not actually going anywhere (wedged on a wall, a corner, another kart...)
+    private void CheckStuck() {
+        Vector3 pos   = transform.position;
+        float   speed = Flat(pos - lastPosition).magnitude / Mathf.Max(Time.deltaTime, 0.0001f);
+        lastPosition  = pos;
+
+        if (Steering.sqrMagnitude > 0.09f && speed < stuckSpeed) stuckTimer += Time.deltaTime;
+        else stuckTimer = 0f;
+
+        if (stuckTimer < stuckTime) return;
+
+        stuckTimer = 0f;
+        GiveUpOnTarget();
+    }
+
+    private void GiveUpOnTarget() {
+        // If it was a ball we were after, leave it alone for a while
+        if (currentBall != null) {
+            ignoredBall     = currentBall;
+            ignoreBallUntil = Time.time + 8f;
+        }
+
+        hasWander = false;
+        Detour();
+    }
+
+    // Head for a random nearby point for a moment, then decide again
+    private void Detour() {
+        if (!TryRandomNearbyPoint(out distractionTarget)) return;
+
+        distractedUntil = Time.time + detourTime;
+        nextThinkTime   = Time.time;
+        hasMoveTarget   = false; // stop pushing against the old target this frame
     }
 
     private void UpdateAim() {
@@ -317,17 +404,6 @@ public class BotKartInput : MonoBehaviour, IKartInput {
     }
 
     // ---------- World queries ----------
-
-    private Kart CrownHolder() {
-        foreach (Kart k in karts) {
-            if (k != kart) {
-                bool hasCrown = k.GetComponent<KartEffects>().HasCrown;
-                if (hasCrown) return k;
-            }
-        }
-
-        return null;
-    }
 
     // Nearest other kart; karts carrying a ball look twice as close
     private Kart NearestThreat() {
