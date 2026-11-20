@@ -3,7 +3,11 @@ using UnityEngine.Events;
 
 namespace Managers {
     public class GameManager : MonoBehaviour {
-        public float RoundTime;
+        [SerializeField] private float roundTime;
+        public                   float RoundTime => roundTime;
+        
+        [SerializeField] private float lateGameSeconds       = 15f;
+        public bool IsInLateGame => currentRoundTime <= lateGameSeconds;
 
         public static GameManager       Instance;
         private       float             currentRoundTime;

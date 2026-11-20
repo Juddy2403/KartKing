@@ -16,7 +16,6 @@ namespace Spawners {
 
         [Header("Late game")] 
         
-        [SerializeField] private float lateGameSeconds       = 15f;
         [SerializeField] private int   lateBallsAtMinPlayers = 2;
         [SerializeField] private int   lateBallsAtMaxPlayers = 9;
 
@@ -41,7 +40,7 @@ namespace Spawners {
         }
 
         private int TargetBallCount() {
-            bool lateGame = timeRemaining <= lateGameSeconds;
+            bool lateGame = GameManager.Instance.IsInLateGame;
             float t = Mathf.InverseLerp(PlayerManager.MinPlayersToStart,
                 PlayerManager.MaxPlayers, PlayerManager.Instance.PlayerCount);
 

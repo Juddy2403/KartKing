@@ -11,8 +11,9 @@ namespace Managers {
     public class ScoreManager : MonoBehaviour {
         public static ScoreManager Instance;
 
-        [SerializeField] private int scorePerSecond;
-        [SerializeField] private int scoreMultiplier = 5;
+        [SerializeField] private int   scorePerSecond;
+        [SerializeField] private float lateGameScoreMultiplier = 2f;
+        [SerializeField] private int   scoreRounding         = 5;
 
         public List<ScoreData>       Scores { get; private set; } = new List<ScoreData>();
         public UnityEvent<ScoreData> onScoreUpdate = new();
@@ -30,7 +31,7 @@ namespace Managers {
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            
+
             foreach (var player in PlayerManager.Instance.Players) {
                 Scores.Add(new ScoreData { player = player, score = 0 });
             }
@@ -39,11 +40,11 @@ namespace Managers {
         private void Start() {
             crown = FindFirstObjectByType<Crown>();
             if (!crown) Debug.LogError("No crown found in scene");
-            
+
             SceneManager.Instance.OnSceneChange.AddListener(OnSceneChange);
             crown.onPickUp.AddListener(OnCrownPickup);
         }
-        
+
         private void OnSceneChange(SceneManager.SceneType type) {
             if (type is SceneManager.SceneType.menu or SceneManager.SceneType.arena) {
                 Instance = null;
@@ -65,25 +66,22 @@ namespace Managers {
         private void Update() {
             if (crownHolderIndex == -1) return;
 
-            var timeSincePickup = Time.time - pickUpTime;
-            var scoreData       = Scores[crownHolderIndex];
+            var  timeSincePickup = Time.time - pickUpTime;
+            var  scoreData       = Scores[crownHolderIndex];
+            bool lateGame        = GameManager.Instance.IsInLateGame;
+            var  scoreMultiplier = lateGame ? lateGameScoreMultiplier : 1f;
+            int  newScore        = Mathf.FloorToInt(scorePerSecond * scoreMultiplier * timeSincePickup);
 
-            int newScore = Mathf.FloorToInt(scorePerSecond * timeSincePickup);
-
-            if (newScore < lastReportedScore + scoreMultiplier)
-                return;
+            if (newScore < lastReportedScore + scoreMultiplier) return;
 
             scoreData.score          = newScore;
             Scores[crownHolderIndex] = scoreData;
-
-            lastReportedScore = newScore;
-
+            lastReportedScore        = newScore;
             onScoreUpdate.Invoke(scoreData);
         }
 
         private void OnDestroy() {
             onScoreUpdate.RemoveAllListeners();
         }
-
     }
 }

@@ -35,6 +35,7 @@ namespace UI {
         private void OnTimeTick(float time) {
             TimeSpan timeSpan = TimeSpan.FromSeconds(time);
             timerText.text = timeSpan.ToString(@"mm\:ss");
+            if (GameManager.Instance.IsInLateGame) timerText.style.color = Color.red;
         }
     }
 }
