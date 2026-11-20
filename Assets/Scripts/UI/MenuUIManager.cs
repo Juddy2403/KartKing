@@ -17,16 +17,21 @@ namespace UI {
             quitButton = uiDoc.rootVisualElement.Q<Button>("Quit");
             
             startButton.Focus();
-            startButton.clicked  += OnStartButton;
-            quitButton.clicked += OnQuit;
+            startButton.clicked    += OnStartButton;
+            tutorialButton.clicked += OnTutorialButton;
+            quitButton.clicked     += OnQuitButton;
+        }
+
+        private void OnTutorialButton() {
+            SceneManager.Instance.LoadScene(SceneManager.SceneType.tutorial);
         }
 
         private void OnDestroy() {
             startButton.clicked -= OnStartButton;
-            quitButton.clicked -= OnQuit;
+            quitButton.clicked -= OnQuitButton;
         }
 
-        private void OnQuit() {
+        private void OnQuitButton() {
             Application.Quit();
         }
 

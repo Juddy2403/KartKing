@@ -92,6 +92,9 @@ MonoBehaviour:
     type: 2
   - name: Leaderboard
     type: 3
+  tutorialScene:
+    name: Tutorial
+    type: 4
   OnSceneChange:
     m_PersistentCalls:
       m_Calls: []

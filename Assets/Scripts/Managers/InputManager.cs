@@ -31,7 +31,7 @@ namespace Managers {
         private void OnSceneChange(SceneManager.SceneType type) {
             var map = inputActions.FindActionMap("Lobby", true);
             UnsubscribeFromEvents(map);
-            
+
             switch (type) {
                 case SceneManager.SceneType.arena:
                     map.Disable();
@@ -51,6 +51,10 @@ namespace Managers {
                     map.FindAction("Confirm").started += Replay;
                     map.FindAction("Cancel").started  += GoToMenu;
                     break;
+                case SceneManager.SceneType.tutorial:
+                    map.Enable();
+                    map.FindAction("Cancel").started += GoToMenu;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -67,10 +71,10 @@ namespace Managers {
         private void UnsubscribeFromEvents(InputActionMap map) {
             map.FindAction("Confirm").started -= HandleConfirm;
             map.FindAction("Cancel").started  -= HandleCancel;
-                    
+
             map.FindAction("Confirm").started -= Replay;
             map.FindAction("Cancel").started  -= GoToMenu;
-            
+
             map.FindAction("AddBot").started    -= AddBot;
             map.FindAction("RemoveBot").started -= RemoveBot;
         }

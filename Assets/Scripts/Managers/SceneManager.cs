@@ -12,6 +12,8 @@ namespace Managers {
     }
     public class SceneManager : MonoBehaviour {
         [SerializeField] private List<Scene> scenes;
+        // Not included in the load next rotation
+        [SerializeField] private Scene tutorialScene;
 
         public static SceneManager Instance { get; private set; }
 
@@ -23,7 +25,8 @@ namespace Managers {
             menu,
             lobby,
             arena,
-            leaderboard
+            leaderboard,
+            tutorial
         }
 
         private void Awake() {
@@ -53,6 +56,11 @@ namespace Managers {
         }
 
         public void LoadScene(SceneType sceneType) {
+            if (sceneType == SceneType.tutorial) {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(tutorialScene.name);
+                OnSceneChange?.Invoke(tutorialScene.type);
+                return;
+            }
             for (int i = 0; i < scenes.Count; i++) {
                 if (scenes[i].type != sceneType) continue;
                 sceneIdx = i;
